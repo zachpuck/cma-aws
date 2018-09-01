@@ -1,0 +1,415 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Cluster Manager AWS Helper API",
+    "version": "v0.1.0",
+    "contact": {
+      "name": "Michael Venezia",
+      "url": "https://gitlab.com/mvenezia/cma-aws",
+      "email": "mvenezia@gmail.com"
+    }
+  },
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/cluster": {
+      "get": {
+        "summary": "Will retrieve the status of a cluster and its kubeconfig for connectivity",
+        "operationId": "GetCluster",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmaawsGetClusterReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "description": "Name of the cluster to be looked up.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Cluster"
+        ]
+      },
+      "delete": {
+        "summary": "Will delete a cluster",
+        "operationId": "DeleteCluster",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmaawsDeleteClusterReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "description": "What is the cluster's name to destroy.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Cluster"
+        ]
+      },
+      "put": {
+        "summary": "Will provision a cluster",
+        "operationId": "CreateCluster",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmaawsCreateClusterReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cmaawsCreateClusterMsg"
+            }
+          }
+        ],
+        "tags": [
+          "Cluster"
+        ]
+      }
+    },
+    "/api/v1/cluster/list": {
+      "get": {
+        "summary": "Will retrieve a list of clusters",
+        "operationId": "GetClusterList",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmaawsGetClusterListReply"
+            }
+          }
+        },
+        "tags": [
+          "Cluster"
+        ]
+      }
+    },
+    "/api/v1/version": {
+      "get": {
+        "summary": "Will return version information about api server",
+        "operationId": "GetVersionInformation",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmaawsGetVersionReply"
+            }
+          }
+        },
+        "tags": [
+          "Cluster"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "CreateClusterAWSSpecAWSCredentials": {
+      "type": "object",
+      "properties": {
+        "secret_key_id": {
+          "type": "string",
+          "title": "The SecretKeyId for API Access"
+        },
+        "secret_access_key": {
+          "type": "string",
+          "title": "The SecretAccessKey for API access"
+        }
+      },
+      "title": "The credentials to use for creating the cluster"
+    },
+    "CreateClusterAWSSpecAWSDataCenter": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "title": "Which region (us-east-1, etc.)"
+        },
+        "availability_zones": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "Which availability zones (us-east-1b, us-east-2c, us-west-2d, etc.)"
+        }
+      },
+      "title": "Which Data Center"
+    },
+    "CreateClusterAWSSpecAWSInstanceGroup": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "Instance type (m5.large, etc.)"
+        },
+        "min_quantity": {
+          "type": "integer",
+          "format": "int32",
+          "title": "Minimum number of instances (defaults to zero)"
+        },
+        "max_quantity": {
+          "type": "integer",
+          "format": "int32",
+          "title": "Maximum number of instances (defaults to zero)"
+        }
+      },
+      "title": "Instance groups define a type and number of instances"
+    },
+    "CreateClusterAWSSpecAWSPreconfiguredItems": {
+      "type": "object",
+      "properties": {
+        "vpc_id": {
+          "type": "string",
+          "title": "The VPC id, blank for for \"create one for you\", filled if you are BYO VPC"
+        },
+        "security_group_id": {
+          "type": "string",
+          "title": "Security group"
+        },
+        "iam_role_arn": {
+          "type": "string",
+          "title": "The IAM role for the cluster (arn)"
+        }
+      },
+      "title": "For when some things are already created"
+    },
+    "GetVersionReplyVersionInformation": {
+      "type": "object",
+      "properties": {
+        "git_version": {
+          "type": "string",
+          "title": "The tag on the git repository"
+        },
+        "git_commit": {
+          "type": "string",
+          "title": "The hash of the git commit"
+        },
+        "git_tree_state": {
+          "type": "string",
+          "title": "Whether or not the tree was clean when built"
+        },
+        "build_date": {
+          "type": "string",
+          "title": "Date of build"
+        },
+        "go_version": {
+          "type": "string",
+          "title": "Version of go used to compile"
+        },
+        "compiler": {
+          "type": "string",
+          "title": "Compiler used"
+        },
+        "platform": {
+          "type": "string",
+          "title": "Platform it was compiled for / running on"
+        }
+      }
+    },
+    "cmaawsClusterDetailItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "ID of the cluster"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name of the cluster"
+        },
+        "status": {
+          "type": "string",
+          "title": "What is the status of the cluster"
+        },
+        "kubeconfig": {
+          "type": "string",
+          "title": "What is the kubeconfig to connect to the cluster"
+        }
+      }
+    },
+    "cmaawsClusterItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "ID of the cluster"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name of the cluster"
+        },
+        "status": {
+          "type": "string",
+          "title": "What is the status of the cluster"
+        }
+      }
+    },
+    "cmaawsCreateClusterAWSSpec": {
+      "type": "object",
+      "properties": {
+        "data_center": {
+          "$ref": "#/definitions/CreateClusterAWSSpecAWSDataCenter",
+          "title": "The AWS Data Center"
+        },
+        "credentials": {
+          "$ref": "#/definitions/CreateClusterAWSSpecAWSCredentials",
+          "title": "Credentials to build the cluster"
+        },
+        "resources": {
+          "$ref": "#/definitions/CreateClusterAWSSpecAWSPreconfiguredItems",
+          "title": "BYO items"
+        },
+        "instance_groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CreateClusterAWSSpecAWSInstanceGroup"
+          },
+          "title": "Instance groups"
+        }
+      }
+    },
+    "cmaawsCreateClusterMsg": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "Name of the cluster to be provisioned"
+        },
+        "provider": {
+          "$ref": "#/definitions/cmaawsCreateClusterProviderSpec",
+          "title": "The provider specification"
+        }
+      }
+    },
+    "cmaawsCreateClusterProviderSpec": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "What is the provider - currently this is aws or maas"
+        },
+        "k8s_version": {
+          "type": "string",
+          "title": "The version of Kubernetes"
+        },
+        "aws": {
+          "$ref": "#/definitions/cmaawsCreateClusterAWSSpec",
+          "title": "The AWS specification"
+        },
+        "high_availability": {
+          "type": "boolean",
+          "format": "boolean",
+          "title": "Whether or not the cluster is HA"
+        },
+        "network_fabric": {
+          "type": "string",
+          "title": "The fabric to be used"
+        }
+      }
+    },
+    "cmaawsCreateClusterReply": {
+      "type": "object",
+      "properties": {
+        "ok": {
+          "type": "boolean",
+          "format": "boolean",
+          "title": "Whether or not the cluster was provisioned by this request"
+        },
+        "cluster": {
+          "$ref": "#/definitions/cmaawsClusterItem",
+          "title": "The details of the cluster request response"
+        }
+      }
+    },
+    "cmaawsDeleteClusterReply": {
+      "type": "object",
+      "properties": {
+        "ok": {
+          "type": "boolean",
+          "format": "boolean",
+          "title": "Could the cluster be destroyed"
+        },
+        "status": {
+          "type": "string",
+          "title": "Status of the request"
+        }
+      }
+    },
+    "cmaawsGetClusterListReply": {
+      "type": "object",
+      "properties": {
+        "ok": {
+          "type": "boolean",
+          "format": "boolean",
+          "title": "Is the cluster in the system"
+        },
+        "clusters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/cmaawsClusterItem"
+          },
+          "title": "List of clusters"
+        }
+      }
+    },
+    "cmaawsGetClusterReply": {
+      "type": "object",
+      "properties": {
+        "ok": {
+          "type": "boolean",
+          "format": "boolean",
+          "title": "Is the cluster in the system"
+        },
+        "cluster": {
+          "$ref": "#/definitions/cmaawsClusterDetailItem"
+        }
+      }
+    },
+    "cmaawsGetVersionReply": {
+      "type": "object",
+      "properties": {
+        "ok": {
+          "type": "boolean",
+          "format": "boolean",
+          "title": "If operation was OK"
+        },
+        "version_information": {
+          "$ref": "#/definitions/GetVersionReplyVersionInformation",
+          "title": "Version Information"
+        }
+      },
+      "title": "Reply for version request"
+    }
+  },
+  "externalDocs": {
+    "description": "More about Cluster Manager AWS Helper API",
+    "url": "https://gitlab.com/mvenezia/cma-aws"
+  }
+}

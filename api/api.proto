@@ -1,0 +1,243 @@
+// Copyright 2018 Samsung SDS Cloud Native Computing Team authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+// Michael Venezia <mvenezia@gmail.com>
+// Alika Larsen <alika.larsen@gmail.com>
+
+syntax = "proto3";
+
+package cmaaws;
+
+import "google/api/annotations.proto";
+import "protoc-gen-swagger/options/annotations.proto";
+
+
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+  info: {
+    title: "Cluster Manager AWS Helper API";
+    version: "v0.1.0";
+    contact: {
+        name: "Michael Venezia";
+        url: "https://gitlab.com/mvenezia/cma-aws";
+        email: "mvenezia@gmail.com";
+    };
+  };
+  external_docs: {
+    url: "https://gitlab.com/mvenezia/cma-aws";
+    description: "More about Cluster Manager AWS Helper API";
+  }
+  schemes: HTTPS;
+  schemes: HTTP;
+  consumes: "application/json";
+  produces: "application/json";
+};
+
+service Cluster {
+    // Will provision a cluster
+    rpc CreateCluster (CreateClusterMsg) returns (CreateClusterReply) {
+        option (google.api.http) = {
+            put : "/api/v1/cluster"
+            body : "*"
+        };
+    }
+    // Will retrieve the status of a cluster and its kubeconfig for connectivity
+    rpc GetCluster (GetClusterMsg) returns (GetClusterReply) {
+        option (google.api.http) = {
+            get : "/api/v1/cluster"
+        };
+    }
+    // Will delete a cluster
+    rpc DeleteCluster (DeleteClusterMsg) returns (DeleteClusterReply) {
+        option (google.api.http) = {
+            delete : "/api/v1/cluster"
+        };
+    }
+    // Will retrieve a list of clusters
+    rpc GetClusterList (GetClusterListMsg) returns (GetClusterListReply) {
+        option (google.api.http) = {
+            get : "/api/v1/cluster/list"
+        };
+    }
+    // Will return version information about api server
+    rpc GetVersionInformation (GetVersionMsg) returns (GetVersionReply) {
+        option (google.api.http) = {
+            get : "/api/v1/version"
+        };
+    }
+}
+
+message CreateClusterMsg {
+    // Name of the cluster to be provisioned
+    string name = 1;
+    // The provider specification
+    CreateClusterProviderSpec provider = 2;
+}
+
+message CreateClusterReply {
+    // Whether or not the cluster was provisioned by this request
+    bool ok = 1;
+    // The details of the cluster request response
+    ClusterItem cluster = 2;
+}
+
+message GetClusterMsg {
+    // Name of the cluster to be looked up
+    string name = 1;
+}
+
+message GetClusterReply {
+    // Is the cluster in the system
+    bool ok = 1;
+
+    ClusterDetailItem cluster = 2;
+}
+
+message DeleteClusterMsg {
+    // What is the cluster's name to destroy
+    string name = 1;
+}
+
+message DeleteClusterReply {
+    // Could the cluster be destroyed
+    bool ok = 1;
+    // Status of the request
+    string status = 2;
+}
+
+message GetClusterListMsg {
+}
+
+message GetClusterListReply {
+    // Is the cluster in the system
+    bool ok = 1;
+    // List of clusters
+    repeated ClusterItem clusters = 2;
+}
+
+message ClusterItem {
+    // ID of the cluster
+    string id = 1;
+    // Name of the cluster
+    string name = 2;
+    // What is the status of the cluster
+    string status = 3;
+}
+
+message ClusterDetailItem {
+    // ID of the cluster
+    string id = 1;
+    // Name of the cluster
+    string name = 2;
+    // What is the status of the cluster
+    string status = 3;
+    // What is the kubeconfig to connect to the cluster
+    string kubeconfig = 4;
+}
+
+message CreateClusterProviderSpec {
+    // What is the provider - currently this is aws or maas
+    string name = 1;
+    // The version of Kubernetes
+    string k8s_version = 2;
+
+    oneof provider_information {
+        // The AWS specification
+        CreateClusterAWSSpec aws = 3;
+    }
+
+    // Whether or not the cluster is HA
+    bool high_availability = 4;
+    // The fabric to be used
+    string network_fabric = 5;
+
+}
+
+message CreateClusterAWSSpec {
+    // The AWS Data Center
+    AWSDataCenter data_center = 1;
+    // Credentials to build the cluster
+    AWSCredentials credentials = 2;
+    // BYO items
+    AWSPreconfiguredItems resources = 3;
+    // Instance groups
+    repeated AWSInstanceGroup instance_groups = 4;
+
+    // Which Data Center
+    message AWSDataCenter {
+        // Which region (us-east-1, etc.)
+        string region = 1;
+        // Which availability zones (us-east-1b, us-east-2c, us-west-2d, etc.)
+        repeated string availability_zones = 2;
+    }
+
+    // The credentials to use for creating the cluster
+    message AWSCredentials {
+        // The SecretKeyId for API Access
+        string secret_key_id = 1;
+        // The SecretAccessKey for API access
+        string secret_access_key = 2;
+    }
+
+    // For when some things are already created
+    message AWSPreconfiguredItems {
+        // The VPC id, blank for for "create one for you", filled if you are BYO VPC
+        string vpc_id = 1;
+        // Security group
+        string security_group_id = 2;
+        // The IAM role for the cluster (arn)
+        string iam_role_arn = 3;
+    }
+
+    // Instance groups define a type and number of instances
+    message AWSInstanceGroup {
+        // Instance type (m5.large, etc.)
+        string type = 1;
+        // Minimum number of instances (defaults to zero)
+        int32 min_quantity = 2;
+        // Maximum number of instances (defaults to zero)
+        int32 max_quantity = 3;
+    }
+}
+
+// Get version of API Server
+message GetVersionMsg {
+}
+
+// Reply for version request
+message GetVersionReply {
+    // If operation was OK
+    bool ok = 1;
+
+    message VersionInformation {
+        // The tag on the git repository
+        string git_version = 1;
+        // The hash of the git commit
+        string git_commit = 2;
+        // Whether or not the tree was clean when built
+        string git_tree_state = 3;
+        // Date of build
+        string build_date = 4;
+        // Version of go used to compile
+        string go_version = 5;
+        // Compiler used
+        string compiler = 6;
+        // Platform it was compiled for / running on
+        string platform = 7;
+    }
+
+    // Version Information
+    VersionInformation version_information = 2;
+}
+
+

@@ -1,0 +1,91 @@
+package cmd
+
+import (
+	"flag"
+	"fmt"
+	"github.com/juju/loggo"
+	"github.com/soheilhy/cmux"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+	"gitlab.com/mvenezia/cma-aws/pkg/apiserver"
+	"gitlab.com/mvenezia/cma-aws/pkg/util"
+	"net"
+	"os"
+	"strings"
+	"sync"
+)
+
+var (
+	logger loggo.Logger
+
+	RootCmd = &cobra.Command{
+		Use:              "cma-aws",
+		Short:            "The CMA AWS Helper",
+		Long:             `The CMA AWS Helper
+
+Running this by itself will invoke the webserver to run.
+See subcommands for additional features`,
+		Run: func(cmd *cobra.Command, args []string) {
+			runWebServer()
+		},
+		TraverseChildren: true,
+	}
+)
+
+func runWebServer() {
+	logger := util.GetModuleLogger("cmd.cmaaws", loggo.INFO)
+
+	// get flags
+	portNumber := viper.GetInt("port")
+
+	var wg sync.WaitGroup
+	stop := make(chan struct{})
+
+	logger.Infof("Creating Web Server")
+	tcpMux := createWebServer(&apiserver.ServerOptions{PortNumber: portNumber})
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		logger.Infof("Starting to serve requests on port %d", portNumber)
+		tcpMux.Serve()
+	}()
+
+	<-stop
+	logger.Infof("Waiting for controllers to shut down gracefully")
+	wg.Wait()
+}
+
+func createWebServer(options *apiserver.ServerOptions) cmux.CMux {
+	conn, err := net.Listen("tcp", fmt.Sprintf(":%d", options.PortNumber))
+	if err != nil {
+		panic(err)
+	}
+	tcpMux := cmux.New(conn)
+
+	apiserver.AddServersToMux(tcpMux, options)
+
+	return tcpMux
+}
+
+func init() {
+
+	viper.SetEnvPrefix("cmaaws")
+	replacer := strings.NewReplacer("-", "_")
+	viper.SetEnvKeyReplacer(replacer)
+
+	// using standard library "flag" package
+	RootCmd.Flags().Int("port", 9040, "Port to listen on")
+
+	viper.BindPFlag("port", RootCmd.Flags().Lookup("port"))
+
+	viper.AutomaticEnv()
+	RootCmd.Flags().AddGoFlagSet(flag.CommandLine)
+
+}
+
+func Execute() {
+	if err := RootCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+}
