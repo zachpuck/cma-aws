@@ -105,6 +105,10 @@ func (s *Server) DeleteCluster(ctx context.Context, in *pb.DeleteClusterMsg) (*p
 	if err != nil {
 		return nil, err
 	}
+	err = awsutil.DeleteKey(stackId, credentials)
+	if err != nil {
+		return nil, err
+	}
 	return &pb.DeleteClusterReply{Ok: true, Status: "Deleting"}, nil
 }
 
