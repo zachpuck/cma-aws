@@ -5,7 +5,7 @@
 
 name: cma-aws
 image:
-  repo: registry.gitlab.com/mvenezia/cma-aws:branch-master-94355272
+  repo: registry.gitlab.com/mvenezia/cma-aws:branch-master-94369596
 
 port: 80
 service:
