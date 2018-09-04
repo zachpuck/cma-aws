@@ -78,8 +78,8 @@ dep-ensure:
 # Run the code generators for the user
 generators:
 	./build/generators/api.sh
-	./build/generators/bindata.sh
 	./build/generators/swagger-dist-adjustment.sh
+	./build/generators/bindata.sh
 
 # Build a darwin (mac) binary
 cmaaws-bin-darwin:
