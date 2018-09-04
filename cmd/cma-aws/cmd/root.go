@@ -9,6 +9,8 @@ import (
 	"github.com/spf13/viper"
 	"gitlab.com/mvenezia/cma-aws/pkg/apiserver"
 	"gitlab.com/mvenezia/cma-aws/pkg/util"
+	"gitlab.com/mvenezia/cma-aws/pkg/util/k8s"
+	"io/ioutil"
 	"net"
 	"os"
 	"strings"
@@ -19,9 +21,9 @@ var (
 	logger loggo.Logger
 
 	RootCmd = &cobra.Command{
-		Use:              "cma-aws",
-		Short:            "The CMA AWS Helper",
-		Long:             `The CMA AWS Helper
+		Use:   "cma-aws",
+		Short: "The CMA AWS Helper",
+		Long: `The CMA AWS Helper
 
 Running this by itself will invoke the webserver to run.
 See subcommands for additional features`,
@@ -75,8 +77,14 @@ func init() {
 
 	// using standard library "flag" package
 	RootCmd.Flags().Int("port", 9040, "Port to listen on")
+	RootCmd.PersistentFlags().String("kubeconfig", "", "Location of kubeconfig file")
+	RootCmd.PersistentFlags().String("kubectl", "kubectl", "Location of kubectl file")
+	RootCmd.PersistentFlags().String("kubernetes-namespace", "default", "What namespace to operate on")
 
 	viper.BindPFlag("port", RootCmd.Flags().Lookup("port"))
+	viper.BindPFlag("kubeconfig", RootCmd.PersistentFlags().Lookup("kubeconfig"))
+	viper.BindPFlag("kubectl", RootCmd.PersistentFlags().Lookup("kubectl"))
+	viper.BindPFlag("kubernetes-namespace", RootCmd.PersistentFlags().Lookup("kubernetes-namespace"))
 
 	viper.AutomaticEnv()
 	RootCmd.Flags().AddGoFlagSet(flag.CommandLine)
@@ -88,4 +96,18 @@ func Execute() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+}
+
+func storeKey() {
+	data, err := ioutil.ReadFile("/samsung/go/src/gitlab.com/mvenezia/cma-aws/dumbo/silly")
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	err = k8sutil.CreateSSHSecret("test-mike-4-ssh", viper.GetString("kubernetes-namespace"), data)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	fmt.Printf("Created Key\n")
 }

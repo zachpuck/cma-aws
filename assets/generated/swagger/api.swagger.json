@@ -39,6 +39,27 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "credentials.secret_key_id",
+            "description": "The SecretKeyId for API Access.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "credentials.secret_access_key",
+            "description": "The SecretAccessKey for API access.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "credentials.region",
+            "description": "The Region for API access.",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -60,6 +81,27 @@
           {
             "name": "name",
             "description": "What is the cluster's name to destroy.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "credentials.secret_key_id",
+            "description": "The SecretKeyId for API Access.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "credentials.secret_access_key",
+            "description": "The SecretAccessKey for API access.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "credentials.region",
+            "description": "The Region for API access.",
             "in": "query",
             "required": false,
             "type": "string"
@@ -131,20 +173,6 @@
     }
   },
   "definitions": {
-    "CreateClusterAWSSpecAWSCredentials": {
-      "type": "object",
-      "properties": {
-        "secret_key_id": {
-          "type": "string",
-          "title": "The SecretKeyId for API Access"
-        },
-        "secret_access_key": {
-          "type": "string",
-          "title": "The SecretAccessKey for API access"
-        }
-      },
-      "title": "The credentials to use for creating the cluster"
-    },
     "CreateClusterAWSSpecAWSDataCenter": {
       "type": "object",
       "properties": {
@@ -233,6 +261,24 @@
         }
       }
     },
+    "cmaawsAWSCredentials": {
+      "type": "object",
+      "properties": {
+        "secret_key_id": {
+          "type": "string",
+          "title": "The SecretKeyId for API Access"
+        },
+        "secret_access_key": {
+          "type": "string",
+          "title": "The SecretAccessKey for API access"
+        },
+        "region": {
+          "type": "string",
+          "title": "The Region for API access"
+        }
+      },
+      "title": "The credentials to use for creating the cluster"
+    },
     "cmaawsClusterDetailItem": {
       "type": "object",
       "properties": {
@@ -279,7 +325,7 @@
           "title": "The AWS Data Center"
         },
         "credentials": {
-          "$ref": "#/definitions/CreateClusterAWSSpecAWSCredentials",
+          "$ref": "#/definitions/cmaawsAWSCredentials",
           "title": "Credentials to build the cluster"
         },
         "resources": {

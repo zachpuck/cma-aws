@@ -4,10 +4,10 @@
 ## Table of Contents
 
 - [api.proto](#api.proto)
+    - [AWSCredentials](#cmaaws.AWSCredentials)
     - [ClusterDetailItem](#cmaaws.ClusterDetailItem)
     - [ClusterItem](#cmaaws.ClusterItem)
     - [CreateClusterAWSSpec](#cmaaws.CreateClusterAWSSpec)
-    - [CreateClusterAWSSpec.AWSCredentials](#cmaaws.CreateClusterAWSSpec.AWSCredentials)
     - [CreateClusterAWSSpec.AWSDataCenter](#cmaaws.CreateClusterAWSSpec.AWSDataCenter)
     - [CreateClusterAWSSpec.AWSInstanceGroup](#cmaaws.CreateClusterAWSSpec.AWSInstanceGroup)
     - [CreateClusterAWSSpec.AWSPreconfiguredItems](#cmaaws.CreateClusterAWSSpec.AWSPreconfiguredItems)
@@ -30,10 +30,10 @@
   
 
 - [api.proto](#api.proto)
+    - [AWSCredentials](#cmaaws.AWSCredentials)
     - [ClusterDetailItem](#cmaaws.ClusterDetailItem)
     - [ClusterItem](#cmaaws.ClusterItem)
     - [CreateClusterAWSSpec](#cmaaws.CreateClusterAWSSpec)
-    - [CreateClusterAWSSpec.AWSCredentials](#cmaaws.CreateClusterAWSSpec.AWSCredentials)
     - [CreateClusterAWSSpec.AWSDataCenter](#cmaaws.CreateClusterAWSSpec.AWSDataCenter)
     - [CreateClusterAWSSpec.AWSInstanceGroup](#cmaaws.CreateClusterAWSSpec.AWSInstanceGroup)
     - [CreateClusterAWSSpec.AWSPreconfiguredItems](#cmaaws.CreateClusterAWSSpec.AWSPreconfiguredItems)
@@ -63,6 +63,23 @@
 <p align="right"><a href="#top">Top</a></p>
 
 ## api.proto
+
+
+
+<a name="cmaaws.AWSCredentials"/>
+
+### AWSCredentials
+The credentials to use for creating the cluster
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| secret_key_id | [string](#string) |  | The SecretKeyId for API Access |
+| secret_access_key | [string](#string) |  | The SecretAccessKey for API access |
+| region | [string](#string) |  | The Region for API access |
+
+
+
 
 
 
@@ -110,25 +127,9 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | data_center | [CreateClusterAWSSpec.AWSDataCenter](#cmaaws.CreateClusterAWSSpec.AWSDataCenter) |  | The AWS Data Center |
-| credentials | [CreateClusterAWSSpec.AWSCredentials](#cmaaws.CreateClusterAWSSpec.AWSCredentials) |  | Credentials to build the cluster |
+| credentials | [AWSCredentials](#cmaaws.AWSCredentials) |  | Credentials to build the cluster |
 | resources | [CreateClusterAWSSpec.AWSPreconfiguredItems](#cmaaws.CreateClusterAWSSpec.AWSPreconfiguredItems) |  | BYO items |
 | instance_groups | [CreateClusterAWSSpec.AWSInstanceGroup](#cmaaws.CreateClusterAWSSpec.AWSInstanceGroup) | repeated | Instance groups |
-
-
-
-
-
-
-<a name="cmaaws.CreateClusterAWSSpec.AWSCredentials"/>
-
-### CreateClusterAWSSpec.AWSCredentials
-The credentials to use for creating the cluster
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| secret_key_id | [string](#string) |  | The SecretKeyId for API Access |
-| secret_access_key | [string](#string) |  | The SecretAccessKey for API access |
 
 
 
@@ -245,6 +246,7 @@ For when some things are already created
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | name | [string](#string) |  | What is the cluster&#39;s name to destroy |
+| credentials | [AWSCredentials](#cmaaws.AWSCredentials) |  | Credentials to delete the cluster |
 
 
 
@@ -302,6 +304,7 @@ For when some things are already created
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | name | [string](#string) |  | Name of the cluster to be looked up |
+| credentials | [AWSCredentials](#cmaaws.AWSCredentials) |  | Credentials to query for the cluster |
 
 
 
@@ -401,6 +404,23 @@ Reply for version request
 
 
 
+<a name="cmaaws.AWSCredentials"/>
+
+### AWSCredentials
+The credentials to use for creating the cluster
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| secret_key_id | [string](#string) |  | The SecretKeyId for API Access |
+| secret_access_key | [string](#string) |  | The SecretAccessKey for API access |
+| region | [string](#string) |  | The Region for API access |
+
+
+
+
+
+
 <a name="cmaaws.ClusterDetailItem"/>
 
 ### ClusterDetailItem
@@ -445,25 +465,9 @@ Reply for version request
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | data_center | [CreateClusterAWSSpec.AWSDataCenter](#cmaaws.CreateClusterAWSSpec.AWSDataCenter) |  | The AWS Data Center |
-| credentials | [CreateClusterAWSSpec.AWSCredentials](#cmaaws.CreateClusterAWSSpec.AWSCredentials) |  | Credentials to build the cluster |
+| credentials | [AWSCredentials](#cmaaws.AWSCredentials) |  | Credentials to build the cluster |
 | resources | [CreateClusterAWSSpec.AWSPreconfiguredItems](#cmaaws.CreateClusterAWSSpec.AWSPreconfiguredItems) |  | BYO items |
 | instance_groups | [CreateClusterAWSSpec.AWSInstanceGroup](#cmaaws.CreateClusterAWSSpec.AWSInstanceGroup) | repeated | Instance groups |
-
-
-
-
-
-
-<a name="cmaaws.CreateClusterAWSSpec.AWSCredentials"/>
-
-### CreateClusterAWSSpec.AWSCredentials
-The credentials to use for creating the cluster
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| secret_key_id | [string](#string) |  | The SecretKeyId for API Access |
-| secret_access_key | [string](#string) |  | The SecretAccessKey for API access |
 
 
 
@@ -580,6 +584,7 @@ For when some things are already created
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | name | [string](#string) |  | What is the cluster&#39;s name to destroy |
+| credentials | [AWSCredentials](#cmaaws.AWSCredentials) |  | Credentials to delete the cluster |
 
 
 
@@ -637,6 +642,7 @@ For when some things are already created
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | name | [string](#string) |  | Name of the cluster to be looked up |
+| credentials | [AWSCredentials](#cmaaws.AWSCredentials) |  | Credentials to query for the cluster |
 
 
 

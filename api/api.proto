@@ -94,6 +94,8 @@ message CreateClusterReply {
 message GetClusterMsg {
     // Name of the cluster to be looked up
     string name = 1;
+    // Credentials to query for the cluster
+    AWSCredentials credentials = 2;
 }
 
 message GetClusterReply {
@@ -106,6 +108,8 @@ message GetClusterReply {
 message DeleteClusterMsg {
     // What is the cluster's name to destroy
     string name = 1;
+    // Credentials to delete the cluster
+    AWSCredentials credentials = 2;
 }
 
 message DeleteClusterReply {
@@ -163,6 +167,16 @@ message CreateClusterProviderSpec {
 
 }
 
+// The credentials to use for creating the cluster
+message AWSCredentials {
+    // The SecretKeyId for API Access
+    string secret_key_id = 1;
+    // The SecretAccessKey for API access
+    string secret_access_key = 2;
+    // The Region for API access
+    string region = 3;
+}
+
 message CreateClusterAWSSpec {
     // The AWS Data Center
     AWSDataCenter data_center = 1;
@@ -179,14 +193,6 @@ message CreateClusterAWSSpec {
         string region = 1;
         // Which availability zones (us-east-1b, us-east-2c, us-west-2d, etc.)
         repeated string availability_zones = 2;
-    }
-
-    // The credentials to use for creating the cluster
-    message AWSCredentials {
-        // The SecretKeyId for API Access
-        string secret_key_id = 1;
-        // The SecretAccessKey for API access
-        string secret_access_key = 2;
     }
 
     // For when some things are already created

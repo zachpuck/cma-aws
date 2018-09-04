@@ -3,6 +3,7 @@ package awsutil
 import (
 	"fmt"
 	"github.com/aws/aws-sdk-go/service/ec2"
+	"gitlab.com/mvenezia/cma-aws/pkg/util/awsutil/models"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
@@ -26,17 +27,14 @@ func GetKeyList() (keyPairs []*ec2.KeyPairInfo, err error) {
 
 // This function will create an AWS Key.
 // TODO This presently does not support the idea of using a preexisting key from the user, perhaps it should support that
-func CreateKey(name string) (privateKey string, err error) {
-	// Bail out if AWS can't be used
-	if EC2Service == nil {
-		err = initializeAWS()
-		if err != nil {
-			return
-		}
+func CreateKey(name string, credentials awsmodels.Credentials) (privateKey string, err error) {
+	service, err := createEC2ServiceFromCredentials(credentials)
+	if err != nil {
+		return
 	}
 
 	// Create the key
-	result, err := EC2Service.CreateKeyPair(&ec2.CreateKeyPairInput{
+	result, err := service.CreateKeyPair(&ec2.CreateKeyPairInput{
 		KeyName: aws.String(name),
 	})
 	// Verify things went OK
@@ -54,15 +52,13 @@ func CreateKey(name string) (privateKey string, err error) {
 	return
 }
 
-func DeleteKey(name string) (err error) {
-	if EC2Service == nil {
-		err = initializeAWS()
-		if err != nil {
-			return
-		}
+func DeleteKey(name string, credentials awsmodels.Credentials) (err error) {
+	service, err := createEC2ServiceFromCredentials(credentials)
+	if err != nil {
+		return
 	}
 
-	_, err = EC2Service.DeleteKeyPair(&ec2.DeleteKeyPairInput{
+	_, err = service.DeleteKeyPair(&ec2.DeleteKeyPairInput{
 		KeyName: aws.String(name),
 	})
 	if err != nil {

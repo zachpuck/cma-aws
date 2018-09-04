@@ -76,3 +76,14 @@
 [prune]
   go-tests = true
   unused-packages = true
+
+[[constraint]]
+  version = "kubernetes-1.11.2"
+#  branch = "master"
+  name = "k8s.io/api"
+
+[[constraint]]
+  version = "kubernetes-1.11.2"
+#  branch = "master"
+  name = "k8s.io/apimachinery"
+

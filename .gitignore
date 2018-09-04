@@ -11,5 +11,5 @@ public/assets/
 .env
 main
 .testCoverage.txt
-cma-eks
-!**/cma-eks/
+cma-aws
+!**/cma-aws/

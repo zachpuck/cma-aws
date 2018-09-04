@@ -32,6 +32,19 @@ func initializeCF() error {
 	return nil
 }
 
+func createCFServiceFromCredentials(input awsutilmodels.Credentials) (*cloudformation.CloudFormation, error) {
+	tempSession, err := session.NewSession(&aws.Config{
+		Region:      aws.String(input.Region),
+		Credentials: credentials.NewStaticCredentials(input.AccessKeyId, input.SecertAccessKey, ""),
+	},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return cloudformation.New(tempSession), nil
+}
+
 func GetCFList() (output []*cloudformation.StackSummary, err error) {
 	if CFService == nil {
 		err = initializeCF()
@@ -65,7 +78,7 @@ func GetCFStack(name string) (resources []*cloudformation.StackResource, paramet
 	return
 }
 
-func DeployEKSVPCCFStack(cfTemplateOptions awsutilmodels.EKSVPCOptions) (awsStackId string, err error) {
+func DeployHeptioCFStack(cfTemplateOptions awsutilmodels.K8SCFTemplateOptions) (awsStackId string, err error) {
 	if CFService == nil {
 		err = initializeCF()
 		if err != nil {
@@ -74,9 +87,22 @@ func DeployEKSVPCCFStack(cfTemplateOptions awsutilmodels.EKSVPCOptions) (awsStac
 	}
 
 	cfStackInput := &cloudformation.CreateStackInput{
-		TemplateURL: aws.String(awsutilmodels.EKSVPCCFTemplateURL),
-		StackName:   aws.String(cfTemplateOptions.Name),
-		Parameters:  []*cloudformation.Parameter{},
+		Capabilities: []*string{aws.String(awsutilmodels.K8SCFTemplateKeyIAMCapability)},
+		TemplateBody: aws.String(awsutilmodels.K8SCFTemplate),
+		StackName:    aws.String(cfTemplateOptions.Name),
+		Parameters: []*cloudformation.Parameter{
+			{ParameterKey: aws.String(awsutilmodels.K8SCFTemplateNameParameter), ParameterValue: aws.String("")},
+			{ParameterKey: aws.String(awsutilmodels.K8SCFTemplateKeyNameParameter), ParameterValue: &cfTemplateOptions.KeyName},
+			{ParameterKey: aws.String(awsutilmodels.K8SCFTemplateVPCIdParameter), ParameterValue: &cfTemplateOptions.VPCId},
+			{ParameterKey: aws.String(awsutilmodels.K8SCFTemplateAvailabilityZoneParameter), ParameterValue: &cfTemplateOptions.AvailabilityZone},
+			{ParameterKey: aws.String(awsutilmodels.K8SCFTemplateClusterSubnetIdParameter), ParameterValue: &cfTemplateOptions.ClusterSubnetId},
+			{ParameterKey: aws.String(awsutilmodels.K8SCFTemplateLoadBalancerSubnetIdParameter), ParameterValue: &cfTemplateOptions.LoadBalancerSubnetId},
+			{ParameterKey: aws.String(awsutilmodels.K8SCFTemplateSSHLocationParameter), ParameterValue: &cfTemplateOptions.SSHLocation},
+			{ParameterKey: aws.String(awsutilmodels.K8SCFTemplateAPILBLocationParameter), ParameterValue: &cfTemplateOptions.APILBLocation},
+			{ParameterKey: aws.String(awsutilmodels.K8SCFTemplateInstanceTypeParameter), ParameterValue: &cfTemplateOptions.InstanceType},
+			{ParameterKey: aws.String(awsutilmodels.K8SCFTemplateDiskSizeParameter), ParameterValue: &cfTemplateOptions.DiskSize},
+			{ParameterKey: aws.String(awsutilmodels.K8SCFTemplateKeyK8sNodeCapacityParameter), ParameterValue: &cfTemplateOptions.K8sNodeCapacity},
+		},
 	}
 
 	output, err := CFService.CreateStack(cfStackInput)
@@ -86,7 +112,33 @@ func DeployEKSVPCCFStack(cfTemplateOptions awsutilmodels.EKSVPCOptions) (awsStac
 	return
 }
 
-func DeleteCFStack(name string) (err error) {
+func DeployNewVPCHeptioCFStack(cfTemplateOptions awsutilmodels.NewVPCK8SCFTemplateOptions, credentials awsutilmodels.Credentials) (awsStackId string, err error) {
+	service, err := createCFServiceFromCredentials(credentials)
+	if err != nil {
+		return
+	}
+	cfStackInput := &cloudformation.CreateStackInput{
+		Capabilities: []*string{aws.String(awsutilmodels.NewVPCK8SCFTemplateKeyIAMCapability)},
+		TemplateBody: aws.String(awsutilmodels.NewVPCHeptioCFTemplate),
+		StackName:    aws.String(cfTemplateOptions.Name),
+		Parameters: []*cloudformation.Parameter{
+			{ParameterKey: aws.String(awsutilmodels.NewVPCK8SCFTemplateKeyNameParameter), ParameterValue: &cfTemplateOptions.KeyName},
+			{ParameterKey: aws.String(awsutilmodels.NewVPCK8SCFTemplateAvailabilityZoneParameter), ParameterValue: &cfTemplateOptions.AvailabilityZone},
+			{ParameterKey: aws.String(awsutilmodels.NewVPCK8SCFTemplateAdminIngressLocationParameter), ParameterValue: &cfTemplateOptions.AdminIngressLocation},
+			{ParameterKey: aws.String(awsutilmodels.NewVPCK8SCFTemplateInstanceTypeParameter), ParameterValue: &cfTemplateOptions.InstanceType},
+			{ParameterKey: aws.String(awsutilmodels.NewVPCK8SCFTemplateDiskSizeParameter), ParameterValue: &cfTemplateOptions.DiskSize},
+			{ParameterKey: aws.String(awsutilmodels.NewVPCK8SCFTemplateKeyK8sNodeCapacityParameter), ParameterValue: &cfTemplateOptions.K8sNodeCapacity},
+		},
+	}
+
+	output, err := service.CreateStack(cfStackInput)
+	if err == nil {
+		awsStackId = *output.StackId
+	}
+	return
+}
+
+func DeployJasonCFStack(cfTemplateOptions awsutilmodels.TestK8SCFTemplateOptions) (awsStackId string, err error) {
 	if CFService == nil {
 		err = initializeCF()
 		if err != nil {
@@ -94,8 +146,37 @@ func DeleteCFStack(name string) (err error) {
 		}
 	}
 
+	cfStackInput := &cloudformation.CreateStackInput{
+		Capabilities: []*string{aws.String(awsutilmodels.TestK8SCFTemplateKeyIAMCapability)},
+		TemplateBody: aws.String(awsutilmodels.TestK8SCFTemplate),
+		StackName:    aws.String(cfTemplateOptions.Name),
+		Parameters: []*cloudformation.Parameter{
+			{ParameterKey: aws.String(awsutilmodels.TestK8SCFTemplateNameParameter), ParameterValue: &cfTemplateOptions.Name},
+			{ParameterKey: aws.String(awsutilmodels.TestK8SCFTemplateKeyNameParameter), ParameterValue: &cfTemplateOptions.KeyName},
+			{ParameterKey: aws.String(awsutilmodels.TestK8SCFTemplateUsernameParameter), ParameterValue: &cfTemplateOptions.Username},
+			{ParameterKey: aws.String(awsutilmodels.TestK8SCFTemplateAvailabilityZoneParameter), ParameterValue: &cfTemplateOptions.AvailabilityZone},
+			{ParameterKey: aws.String(awsutilmodels.TestK8SCFTemplateSSHLocationParameter), ParameterValue: &cfTemplateOptions.SSHLocation},
+			{ParameterKey: aws.String(awsutilmodels.TestK8SCFTemplateInstanceTypeParameter), ParameterValue: &cfTemplateOptions.InstanceType},
+			{ParameterKey: aws.String(awsutilmodels.TestK8SCFTemplateDiskSizeParameter), ParameterValue: &cfTemplateOptions.DiskSize},
+			{ParameterKey: aws.String(awsutilmodels.TestK8SCFTemplateKeyK8sNodeCapacityParameter), ParameterValue: &cfTemplateOptions.K8sNodeCapacity},
+		},
+	}
+
+	output, err := CFService.CreateStack(cfStackInput)
+	if err == nil {
+		awsStackId = *output.StackId
+	}
+	return
+}
+
+func DeleteCFStack(name string, credentials awsutilmodels.Credentials) (err error) {
+	service, err := createCFServiceFromCredentials(credentials)
+	if err != nil {
+		return
+	}
+
 	deleteCFStackInput := &cloudformation.DeleteStackInput{StackName: &name}
-	_, err = CFService.DeleteStack(deleteCFStackInput)
+	_, err = service.DeleteStack(deleteCFStackInput)
 	return
 }
 
@@ -160,4 +241,56 @@ func WaitUntilStackIsReady(stackName string, printProgress bool) error {
 	}
 
 	return nil
+}
+
+func GetHeptioCFStackOutput(name string, credentials awsutilmodels.Credentials) (output awsutilmodels.HeptioStackOutput, err error) {
+	service, err := createCFServiceFromCredentials(credentials)
+	if err != nil {
+		return
+	}
+
+	query, err := service.DescribeStacks(&cloudformation.DescribeStacksInput{StackName: &name})
+	if err != nil {
+		return
+	}
+	if len(query.Stacks) < 1 {
+		err = fmt.Errorf("no stack found with name -->%s<-- ", name)
+		return
+	}
+	stack := query.Stacks[0]
+	if *stack.StackStatus != cloudformation.StackStatusCreateComplete {
+		err = fmt.Errorf("stack -->%s<-- is not complete, rather it has status %s", name, *stack.StackStatus)
+		return
+	}
+
+	// OK, we should feel safe to grab outputs
+	output = createHeptioCFStackOutput(stack.Outputs)
+	return
+}
+
+func createHeptioCFStackOutput(outputs []*cloudformation.Output) awsutilmodels.HeptioStackOutput {
+	output := awsutilmodels.HeptioStackOutput{}
+	for _, j := range outputs {
+		switch *j.OutputKey {
+		case awsutilmodels.HeptioStackOutputBastionHostPublicDNS:
+			output.BastionHostPublicDNS = *j.OutputValue
+			break
+		case awsutilmodels.HeptioStackOutputVPCID:
+			output.VPCID = *j.OutputValue
+			break
+		case awsutilmodels.HeptioStackOutputMasterInstanceId:
+			output.MasterInstanceId = *j.OutputValue
+			break
+		case awsutilmodels.HeptioStackOutputBastionHostPublicIp:
+			output.BastionHostPublicIp = *j.OutputValue
+			break
+		case awsutilmodels.HeptioStackOutputNodeGroupInstanceId:
+			output.NodeGroupInstanceId = *j.OutputValue
+			break
+		case awsutilmodels.HeptioStackOutputMasterPrivateIp:
+			output.MasterPrivateIp = *j.OutputValue
+			break
+		}
+	}
+	return output
 }
