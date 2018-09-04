@@ -9,8 +9,6 @@ import (
 	"github.com/spf13/viper"
 	"gitlab.com/mvenezia/cma-aws/pkg/apiserver"
 	"gitlab.com/mvenezia/cma-aws/pkg/util"
-	"gitlab.com/mvenezia/cma-aws/pkg/util/k8s"
-	"io/ioutil"
 	"net"
 	"os"
 	"strings"
@@ -96,18 +94,4 @@ func Execute() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-}
-
-func storeKey() {
-	data, err := ioutil.ReadFile("/samsung/go/src/gitlab.com/mvenezia/cma-aws/dumbo/silly")
-	if err != nil {
-		fmt.Printf("Error: %s\n", err)
-		return
-	}
-	err = k8sutil.CreateSSHSecret("test-mike-4-ssh", viper.GetString("kubernetes-namespace"), data)
-	if err != nil {
-		fmt.Printf("Error: %s\n", err)
-		return
-	}
-	fmt.Printf("Created Key\n")
 }

@@ -32,6 +32,11 @@ CMAAWS_SOURCE_FILE=cmd/cma-aws/main.go
 # build binary command
 BUILD_CMAAWS_BINARY_CMD=${GOBUILD} -a -tags netgo -ldflags ${LDFLAGS} -o ${CMAAWS_BINARY_NAME} ${CMAAWS_SOURCE_FILE}
 
+# protoc variables
+PROTOC_VERSION=3.5.1
+PROTOC_DARWIN_FILENAME=protoc-${PROTOC_VERSION}-osx-x86_64.zip
+PROTOC_DARWIN_DOWNLOAD_URL=https://github.com/google/protobuf/releases/download/v3.5.1/${PROTOC_DARWIN_FILENAME}
+
 # By default we will most likely want to build a linux build of the application
 all: new-dep cmaaws-bin-linux-amd64
 
@@ -42,6 +47,20 @@ clean: remove-binary
 
 # Installs the required tools
 install-tools: install-dep
+	go get -u github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc
+	go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
+	go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
+	go get -u github.com/golang/protobuf/protoc-gen-go
+	go get github.com/jteeuwen/go-bindata/...
+	go get github.com/elazarl/go-bindata-assetfs/...
+
+# Installs tools for a mac
+install-tools-darwin: install-protoc-darwin install-tools
+
+install-protoc-darwin:
+	curl -L ${PROTOC_DARWIN_DOWNLOAD_URL} > /tmp/${PROTOC_DARWIN_FILENAME}
+	sudo unzip -o /tmp/${PROTOC_DARWIN_FILENAME} -d /usr/local/
+	rm /tmp/${PROTOC_DARWIN_FILENAME}
 
 # Install dep will install dep in $GOROOT/bin
 install-dep:
@@ -55,6 +74,12 @@ new-dep:
 # For builds where we're just going to go along with whatever Gopkg is saying
 dep-ensure:
 	$(DEPCMD) ensure
+
+# Run the code generators for the user
+generators:
+	./build/generators/api.sh
+	./build/generators/bindata.sh
+	./build/generators/swagger-dist-adjustment.sh
 
 # Build a darwin (mac) binary
 cmaaws-bin-darwin:

@@ -15,7 +15,7 @@ func generateSSHSecretKey(clusterName string) string {
 	return clusterName + SSHK8SSecretSuffix
 }
 
-func ProvisionAdnSaveSSHKey(clusterName string, credentials awsmodels.Credentials) (string, error) {
+func ProvisionAndSaveSSHKey(clusterName string, credentials awsmodels.Credentials) (string, error) {
 	privateKey, err := awsutil.CreateKey(clusterName, credentials)
 	if err != nil {
 		return "", err

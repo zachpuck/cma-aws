@@ -26,7 +26,7 @@ func (s *Server) CreateCluster(ctx context.Context, in *pb.CreateClusterMsg) (*p
 	credentials := generateCredentials(in.Provider.GetAws().Credentials)
 
 	// Going to create the SSH Key and store it...
-	keyName, err := cluster.ProvisionAdnSaveSSHKey(clusterName, credentials)
+	keyName, err := cluster.ProvisionAndSaveSSHKey(clusterName, credentials)
 	if err != nil {
 		return nil, err
 	}
