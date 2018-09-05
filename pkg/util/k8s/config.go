@@ -19,11 +19,6 @@ const (
 	kubeconfigFile = "config"
 )
 
-type promptedCredentials struct {
-	username string
-	password string
-}
-
 func GenerateKubernetesConfig() (*rest.Config, error) {
 	if KubeConfigLocation != "" {
 		return clientcmd.BuildConfigFromFlags("", KubeConfigLocation)

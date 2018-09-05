@@ -1,10 +1,13 @@
 package awsutil
 
-import "github.com/aws/aws-sdk-go/service/ec2"
+import (
+	"github.com/aws/aws-sdk-go/service/ec2"
+	"gitlab.com/mvenezia/cma-aws/pkg/util/awsutil/models"
+)
 
-func GetInstanceDetails(instanceId string) (reservation *ec2.Reservation, err error) {
+func GetInstanceDetails(instanceId string, credentials awsmodels.Credentials) (reservation *ec2.Reservation, err error) {
 	instanceIds := []*string{&instanceId}
-	results, err := GetInstanceListDetails(instanceIds)
+	results, err := GetInstanceListDetails(instanceIds, credentials)
 	if err != nil {
 		return
 	}
@@ -12,14 +15,12 @@ func GetInstanceDetails(instanceId string) (reservation *ec2.Reservation, err er
 	return
 }
 
-func GetInstanceListDetails(instanceIds []*string) (reservations []*ec2.Reservation, err error) {
-	if EC2Service == nil {
-		err = initializeAWS()
-		if err != nil {
-			return
-		}
+func GetInstanceListDetails(instanceIds []*string, credentials awsmodels.Credentials) (reservations []*ec2.Reservation, err error) {
+	service, err := createEC2ServiceFromCredentials(credentials)
+	if err != nil {
+		return
 	}
-	instanceDetails, err := EC2Service.DescribeInstances(&ec2.DescribeInstancesInput{InstanceIds: instanceIds})
+	instanceDetails, err := service.DescribeInstances(&ec2.DescribeInstancesInput{InstanceIds: instanceIds})
 	if err != nil || len(instanceDetails.Reservations) < 1 {
 		return
 	}

@@ -10,14 +10,12 @@ import (
 )
 
 // This function will return back a list of key pairs
-func GetKeyList() (keyPairs []*ec2.KeyPairInfo, err error) {
-	if EC2Service == nil {
-		err = initializeAWS()
-		if err != nil {
-			return
-		}
+func GetKeyList(credentials awsmodels.Credentials) (keyPairs []*ec2.KeyPairInfo, err error) {
+	service, err := createEC2ServiceFromCredentials(credentials)
+	if err != nil {
+		return
 	}
-	keyPairList, err := EC2Service.DescribeKeyPairs(nil)
+	keyPairList, err := service.DescribeKeyPairs(nil)
 	if err != nil {
 		return
 	}

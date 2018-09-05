@@ -2,7 +2,7 @@
 
 
 [[projects]]
-  digest = "1:72355557be1dc80522d6ef6603c1df22cb987980613102cd7f9a63754b3f24b2"
+  digest = "1:a284b6648eb9fd145402d51533fdda0f7435a3567069018e984618bbf317308c"
   name = "github.com/aws/aws-sdk-go"
   packages = [
     "aws",
@@ -28,18 +28,12 @@
     "internal/shareddefaults",
     "private/protocol",
     "private/protocol/ec2query",
-    "private/protocol/json/jsonutil",
-    "private/protocol/jsonrpc",
     "private/protocol/query",
     "private/protocol/query/queryutil",
     "private/protocol/rest",
-    "private/protocol/restjson",
     "private/protocol/xml/xmlutil",
-    "service/autoscaling",
     "service/cloudformation",
     "service/ec2",
-    "service/eks",
-    "service/iam",
     "service/sts",
   ]
   pruneopts = "UT"
@@ -657,11 +651,8 @@
     "github.com/aws/aws-sdk-go/aws/awserr",
     "github.com/aws/aws-sdk-go/aws/credentials",
     "github.com/aws/aws-sdk-go/aws/session",
-    "github.com/aws/aws-sdk-go/service/autoscaling",
     "github.com/aws/aws-sdk-go/service/cloudformation",
     "github.com/aws/aws-sdk-go/service/ec2",
-    "github.com/aws/aws-sdk-go/service/eks",
-    "github.com/aws/aws-sdk-go/service/iam",
     "github.com/elazarl/go-bindata-assetfs",
     "github.com/golang/protobuf/proto",
     "github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger/options",
@@ -679,7 +670,6 @@
     "google.golang.org/grpc/grpclog",
     "google.golang.org/grpc/reflection",
     "google.golang.org/grpc/status",
-    "k8s.io/api/batch/v1",
     "k8s.io/api/core/v1",
     "k8s.io/apimachinery/pkg/api/errors",
     "k8s.io/apimachinery/pkg/apis/meta/v1",
