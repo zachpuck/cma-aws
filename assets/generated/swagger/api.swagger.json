@@ -149,6 +149,29 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "credentials.secret_key_id",
+            "description": "The SecretKeyId for API Access.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "credentials.secret_access_key",
+            "description": "The SecretAccessKey for API access.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "credentials.region",
+            "description": "The Region for API access.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
         "tags": [
           "Cluster"
         ]

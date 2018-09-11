@@ -120,6 +120,8 @@ message DeleteClusterReply {
 }
 
 message GetClusterListMsg {
+    // Credentials to query for the cluster
+    AWSCredentials credentials = 1;
 }
 
 message GetClusterListReply {
