@@ -6,27 +6,11 @@ import (
 	"gitlab.com/mvenezia/cma-aws/pkg/util/awsutil"
 	"gitlab.com/mvenezia/cma-aws/pkg/util/awsutil/models"
 	"gitlab.com/mvenezia/cma-aws/pkg/util/cluster"
-	"gitlab.com/mvenezia/cma-aws/pkg/util/k8s"
 	"golang.org/x/net/context"
-	"k8s.io/client-go/kubernetes"
 	"strconv"
 )
 
 func (s *Server) CreateCluster(ctx context.Context, in *pb.CreateClusterMsg) (*pb.CreateClusterReply, error) {
-
-	config, _ := k8sutil.GenerateKubernetesConfig()
-	client, err := kubernetes.NewForConfig(config)
-	secretThing := k8sutil.NewSSHSecret(client.CoreV1())
-	secret, err := secretThing.Get("cmaaws", "test-mike-7-ssh")
-	if err != nil {
-		fmt.Printf("Do Stuff")
-		return nil, nil
-	} else {
-		fmt.Printf("Secret: %s\n", secret)
-		return nil, nil
-	}
-
-
 	// Quick validation
 	if in.Provider.GetAws() == nil {
 		return nil, fmt.Errorf("AWS Configuration not provided, bailing")
