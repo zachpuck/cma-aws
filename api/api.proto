@@ -156,12 +156,8 @@ message CreateClusterProviderSpec {
     string name = 1;
     // The version of Kubernetes
     string k8s_version = 2;
-
-    oneof provider_information {
-        // The AWS specification
-        CreateClusterAWSSpec aws = 3;
-    }
-
+    // The AWS specification
+    CreateClusterAWSSpec aws = 3;
     // Whether or not the cluster is HA
     bool high_availability = 4;
     // The fabric to be used
