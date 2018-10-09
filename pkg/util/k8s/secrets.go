@@ -5,7 +5,62 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
+	v12 "k8s.io/client-go/kubernetes/typed/core/v1"
 )
+
+type CoreV1SecretInterface interface {
+	Secrets(namespace string) (v12.SecretInterface)
+}
+
+type SecretCRUDer interface {
+	Create(*corev1.Secret) (*corev1.Secret, error)
+	Delete(name string, options *v1.DeleteOptions) error
+	Get(name string, options v1.GetOptions) (*corev1.Secret, error)
+}
+
+type Secret struct {
+	secretAPI CoreV1SecretInterface
+}
+
+type SSHSecret struct {
+	Secret
+}
+
+func NewSSHSecret(secretGetter CoreV1SecretInterface) SSHSecret {
+	output := SSHSecret{}
+	output.SetSecretGetter(secretGetter)
+	return output
+}
+
+func (s *Secret) SetSecretGetter(secretAPI CoreV1SecretInterface) {
+	s.secretAPI = secretAPI
+	return
+}
+
+func (s *Secret) GetSecret(namespace string, name string) (secret corev1.Secret, err error) {
+	secretResult, err := s.secretAPI.Secrets(namespace).Get(name, v1.GetOptions{})
+	if err != nil {
+		return
+	}
+	secret = *secretResult
+	return
+}
+
+func (s *SSHSecret) Get(namespace string, name string) (secret []byte, err error) {
+	secretResult, err := s.GetSecret(namespace, name)
+	if err != nil {
+		return
+	}
+	if secretResult.Type != corev1.SecretTypeSSHAuth {
+		err = fmt.Errorf("secret %s is not of type %s, but rather is of type %s", name, corev1.SecretTypeSSHAuth, secretResult.Type)
+		return
+	}
+	if len(secretResult.Data[corev1.SSHAuthPrivateKey]) == 0 {
+		err = fmt.Errorf("secret %s empty", name)
+	}
+	secret = secretResult.Data[corev1.SSHAuthPrivateKey]
+	return
+}
 
 func GetSecretList(namespace string, options v1.ListOptions) (result []corev1.Secret, err error) {
 	if DefaultConfig == nil {

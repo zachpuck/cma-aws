@@ -52,7 +52,7 @@ func (s *Server) CreateCluster(ctx context.Context, in *pb.CreateClusterMsg) (*p
 		Cluster: &pb.ClusterItem{
 			Id:     clusterName,
 			Name:   clusterName,
-			Status: "Creating",
+			Status: pb.ClusterStatus_PROVISIONING,
 		},
 	}, nil
 }
@@ -85,7 +85,7 @@ func (s *Server) GetCluster(ctx context.Context, in *pb.GetClusterMsg) (*pb.GetC
 		Cluster: &pb.ClusterDetailItem{
 			Id:         stackId,
 			Name:       stackId,
-			Status:     "Ready",
+			Status:     pb.ClusterStatus_RUNNING,
 			Kubeconfig: string(kubeconfig),
 		},
 	}, nil
