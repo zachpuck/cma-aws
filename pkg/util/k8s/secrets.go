@@ -9,7 +9,7 @@ import (
 )
 
 type CoreV1SecretInterface interface {
-	Secrets(namespace string) (v12.SecretInterface)
+	Secrets(namespace string) v12.SecretInterface
 }
 
 type SecretCRUDer interface {
