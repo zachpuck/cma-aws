@@ -1,7 +1,9 @@
 package sshhack
 
 import (
+	"fmt"
 	"os/exec"
+	"gopkg.in/alessio/shellescape.v1"
 )
 
 const (
@@ -34,11 +36,18 @@ func (t *GetKubeConfigOptions) GenerateProxyCommand() string {
 }
 
 func GetKubeConfig(options GetKubeConfigOptions) ([]byte, error) {
+
+	// Notes about commandString:
+	// the following commandString is used to retrieve the master elb URL from ./.kube/config, modify it to use port 6443, and set it as the server url in ./kubeconfig.
+	// it will then return the ./kubeconfig file with the replaced "server: " url instead of an ip address, this will allow you to always connect to the master no mater if the ip changes
+	// additionally 'shellescape' is used to escape all the of the single quotes in commandString, for exec.Command to work correctly
+	commandString := fmt.Sprintf("sed 's#server: .*#server: '$(sed -re 's#(https?://.*):([0-9]+)#\\1:6\\2#' %s | grep -Po 'https?://.*')'#' %s", "./.kube/config", "./kubeconfig")
+
 	stuff, err := exec.Command(
 		"/bin/bash",
 		[]string{
 			"-c",
-			`ssh -i ` + options.BastionHost.KeyFilePath + ` ` + StrictHostKeyCheckingOption + ` -o ProxyCommand="` + options.GenerateProxyCommand() + `" ` + options.TargetHost.GenerateUserAtHost() + ` cat ./kubeconfig`}...).Output()
+			`ssh -i ` + options.BastionHost.KeyFilePath + ` ` + StrictHostKeyCheckingOption + ` -o ProxyCommand="` + options.GenerateProxyCommand() + `" ` + options.TargetHost.GenerateUserAtHost() + ` ` + shellescape.Quote(commandString)}...).Output()
 	if err != nil {
 		return nil, err
 	}
