@@ -5,7 +5,7 @@
 
 name: cma-aws
 image:
-  repo: registry.gitlab.com/mvenezia/cma-aws:branch-master-94369596
+  repo: quay.io/samsung_cnct/cma-aws:01.1
 
 port: 80
 service:

@@ -1,0 +1,14 @@
+type: chart
+builds:
+  - image: samsung_cnct/cma-aws
+    context: cma-aws
+    chart: cma-aws
+    value: image.repo
+    dockerContext: .
+deployments:
+  - charts: cma-aws
+    timeout: 600
+    retries: 2
+    release: cma-aws
+prod:
+  doDeploy: none
