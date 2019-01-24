@@ -6,7 +6,7 @@ builds:
     value: image.repo
     dockerContext: .
 deployments:
-  - charts: cma-aws
+  - chart: cma-aws
     timeout: 600
     retries: 2
     release: cma-aws
