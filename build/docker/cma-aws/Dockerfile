@@ -1,6 +1,5 @@
 # Initial preparations
 FROM golang:1.10.3 as builder
-RUN apk update && apk add git make curl
 
 # Let's add the code in
 ADD . /go/src/gitlab.com/mvenezia/cma-aws
