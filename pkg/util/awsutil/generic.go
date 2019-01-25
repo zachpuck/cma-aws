@@ -5,7 +5,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
-	"gitlab.com/mvenezia/cma-aws/pkg/util/awsutil/models"
+	"github.com/samsung-cnct/cma-aws/pkg/util/awsutil/models"
 )
 
 func createEC2ServiceFromCredentials(input awsmodels.Credentials) (*ec2.EC2, error) {

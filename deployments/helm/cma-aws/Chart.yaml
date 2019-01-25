@@ -4,9 +4,9 @@ description: The Cluster Manager API AWS Helper
 keywords:
 - hybridstack
 - api
-home: https://gitlab.com/mvenezia/cma-aws
+home: https://github.com/samsung-cnct/cma-aws
 sources:
-- https://gitlab.com/mvenezia/cma-aws
+- https://github.com/samsung-cnct/cma-aws
 maintainers:
 - name: Michael Venezia
   email: mvenezia@gmail.com

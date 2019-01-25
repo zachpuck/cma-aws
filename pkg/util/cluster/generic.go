@@ -2,7 +2,7 @@ package cluster
 
 import (
 	"github.com/spf13/viper"
-	"gitlab.com/mvenezia/cma-aws/pkg/util/k8s"
+	"github.com/samsung-cnct/cma-aws/pkg/util/k8s"
 )
 
 func CleanupClusterInK8s(clusterName string) error {

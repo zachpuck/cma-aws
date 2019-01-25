@@ -4,9 +4,9 @@ import (
 	"fmt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"gitlab.com/mvenezia/cma-aws/pkg/util/k8s"
+	"github.com/samsung-cnct/cma-aws/pkg/util/k8s"
 
-	_ "gitlab.com/mvenezia/cma-aws/pkg/util/k8s"
+	_ "github.com/samsung-cnct/cma-aws/pkg/util/k8s"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1"
 )

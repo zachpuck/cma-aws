@@ -2,10 +2,10 @@ package apiserver
 
 import (
 	"fmt"
-	pb "gitlab.com/mvenezia/cma-aws/pkg/generated/api"
-	"gitlab.com/mvenezia/cma-aws/pkg/util/awsutil"
-	"gitlab.com/mvenezia/cma-aws/pkg/util/awsutil/models"
-	"gitlab.com/mvenezia/cma-aws/pkg/util/cluster"
+	pb "github.com/samsung-cnct/cma-aws/pkg/generated/api"
+	"github.com/samsung-cnct/cma-aws/pkg/util/awsutil"
+	"github.com/samsung-cnct/cma-aws/pkg/util/awsutil/models"
+	"github.com/samsung-cnct/cma-aws/pkg/util/cluster"
 	"golang.org/x/net/context"
 	"strconv"
 )
