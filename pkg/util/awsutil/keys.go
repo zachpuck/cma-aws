@@ -3,7 +3,7 @@ package awsutil
 import (
 	"fmt"
 	"github.com/aws/aws-sdk-go/service/ec2"
-	"gitlab.com/mvenezia/cma-aws/pkg/util/awsutil/models"
+	"github.com/samsung-cnct/cma-aws/pkg/util/awsutil/models"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"

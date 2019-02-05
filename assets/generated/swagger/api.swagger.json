@@ -5,7 +5,7 @@
     "version": "v0.1.0",
     "contact": {
       "name": "Michael Venezia",
-      "url": "https://gitlab.com/mvenezia/cma-aws",
+      "url": "https://github.com/samsung-cnct/cma-aws",
       "email": "mvenezia@gmail.com"
     }
   },
@@ -501,6 +501,6 @@
   },
   "externalDocs": {
     "description": "More about Cluster Manager AWS Helper API",
-    "url": "https://gitlab.com/mvenezia/cma-aws"
+    "url": "https://github.com/samsung-cnct/cma-aws"
   }
 }

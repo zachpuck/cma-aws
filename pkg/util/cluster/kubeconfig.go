@@ -3,8 +3,8 @@ package cluster
 import (
 	"fmt"
 	"github.com/spf13/viper"
-	"gitlab.com/mvenezia/cma-aws/pkg/util/k8s"
-	"gitlab.com/mvenezia/cma-aws/pkg/util/sshhack"
+	"github.com/samsung-cnct/cma-aws/pkg/util/k8s"
+	"github.com/samsung-cnct/cma-aws/pkg/util/sshhack"
 	"io/ioutil"
 	"os"
 )
