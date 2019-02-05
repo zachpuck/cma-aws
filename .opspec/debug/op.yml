@@ -1,0 +1,20 @@
+name: debug
+description: debug cma-aws locally
+inputs:
+  srcDir:
+    dir:
+      default: .
+      description: directory containing the projects source code
+run:
+  container:
+    name: cma-aws
+    image: { ref: 'golang:1.10-alpine' }
+    dirs:
+      /go/src/github.com/samsung-cnct/cma-aws: $(srcDir)
+    cmd:
+      - sh
+      - -ce
+      - |
+        echo "starting cma-aws debug"
+        go run cmd/cma-aws/main.go
+    workDir: /go/src/github.com/samsung-cnct/cma-aws
