@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudformation"
-	awsutilmodels "gitlab.com/mvenezia/cma-aws/pkg/util/awsutil/models"
+	awsutilmodels "github.com/samsung-cnct/cma-aws/pkg/util/awsutil/models"
 	"time"
 )
 

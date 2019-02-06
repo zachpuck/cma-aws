@@ -3,7 +3,7 @@ package apiserver
 import (
 	"github.com/juju/loggo"
 	"github.com/soheilhy/cmux"
-	"gitlab.com/mvenezia/cma-aws/pkg/util"
+	"github.com/samsung-cnct/cma-aws/pkg/util"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
@@ -12,9 +12,9 @@ import (
 	"strconv"
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	service "gitlab.com/mvenezia/cma-aws/internal/apiserver"
-	pb "gitlab.com/mvenezia/cma-aws/pkg/generated/api"
-	"gitlab.com/mvenezia/cma-aws/pkg/ui/website"
+	service "github.com/samsung-cnct/cma-aws/internal/apiserver"
+	pb "github.com/samsung-cnct/cma-aws/pkg/generated/api"
+	"github.com/samsung-cnct/cma-aws/pkg/ui/website"
 )
 
 var (

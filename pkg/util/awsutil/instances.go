@@ -2,7 +2,7 @@ package awsutil
 
 import (
 	"github.com/aws/aws-sdk-go/service/ec2"
-	"gitlab.com/mvenezia/cma-aws/pkg/util/awsutil/models"
+	"github.com/samsung-cnct/cma-aws/pkg/util/awsutil/models"
 )
 
 func GetInstanceDetails(instanceId string, credentials awsmodels.Credentials) (reservation *ec2.Reservation, err error) {
