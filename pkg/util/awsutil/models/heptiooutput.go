@@ -17,3 +17,9 @@ type HeptioStackOutput struct {
 	NodeGroupInstanceId  string
 	MasterPrivateIp      string
 }
+
+type ClusterOutput struct {
+	Status      string
+	HeptioStackOutput
+}
+

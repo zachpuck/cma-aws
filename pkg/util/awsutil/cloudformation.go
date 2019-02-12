@@ -157,7 +157,7 @@ func WaitUntilStackIsReady(stackName string, printProgress bool, credentials aws
 	return nil
 }
 
-func GetHeptioCFStackOutput(name string, credentials awsutilmodels.Credentials) (output awsutilmodels.HeptioStackOutput, err error) {
+func GetHeptioCFStackOutput(name string, credentials awsutilmodels.Credentials) (output awsutilmodels.ClusterOutput, err error) {
 	service, err := createCFServiceFromCredentials(credentials)
 	if err != nil {
 		return
@@ -173,17 +173,20 @@ func GetHeptioCFStackOutput(name string, credentials awsutilmodels.Credentials) 
 	}
 	stack := query.Stacks[0]
 	if *stack.StackStatus != cloudformation.StackStatusCreateComplete {
-		err = fmt.Errorf("stack -->%s<-- is not complete, rather it has status %s", name, *stack.StackStatus)
+		output = awsutilmodels.ClusterOutput{
+			Status: *stack.StackStatus,
+		}
 		return
 	}
 
 	// OK, we should feel safe to grab outputs
 	output = createHeptioCFStackOutput(stack.Outputs)
+	output.Status = cloudformation.StackStatusCreateComplete
 	return
 }
 
-func createHeptioCFStackOutput(outputs []*cloudformation.Output) awsutilmodels.HeptioStackOutput {
-	output := awsutilmodels.HeptioStackOutput{}
+func createHeptioCFStackOutput(outputs []*cloudformation.Output) awsutilmodels.ClusterOutput {
+	output := awsutilmodels.ClusterOutput{}
 	for _, j := range outputs {
 		switch *j.OutputKey {
 		case awsutilmodels.HeptioStackOutputBastionHostPublicDNS:
