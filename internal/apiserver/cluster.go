@@ -2,6 +2,7 @@ package apiserver
 
 import (
 	"fmt"
+	"github.com/aws/aws-sdk-go/service/cloudformation"
 	pb "github.com/samsung-cnct/cma-aws/pkg/generated/api"
 	"github.com/samsung-cnct/cma-aws/pkg/util/awsutil"
 	"github.com/samsung-cnct/cma-aws/pkg/util/awsutil/models"
@@ -9,6 +10,40 @@ import (
 	"golang.org/x/net/context"
 	"strconv"
 )
+
+// match aws cluster status to api status enum
+func matchStatus(status string) pb.ClusterStatus {
+	switch status {
+	case cloudformation.StackStatusCreateInProgress:
+		return pb.ClusterStatus_PROVISIONING
+	case cloudformation.StackStatusReviewInProgress:
+		return pb.ClusterStatus_RECONCILING
+	case cloudformation.StackStatusRollbackInProgress:
+		return pb.ClusterStatus_RECONCILING
+	case cloudformation.StackStatusUpdateInProgress:
+		return pb.ClusterStatus_RECONCILING
+	case cloudformation.StackStatusCreateComplete:
+		return pb.ClusterStatus_RUNNING
+	case cloudformation.StackStatusUpdateComplete:
+		return pb.ClusterStatus_RUNNING
+	case cloudformation.StackStatusDeleteInProgress:
+		return pb.ClusterStatus_STOPPING
+	case cloudformation.StackStatusDeleteComplete:
+		return pb.ClusterStatus_STOPPING
+	case cloudformation.StackStatusCreateFailed:
+		return pb.ClusterStatus_ERROR
+	case cloudformation.StackStatusDeleteFailed:
+		return pb.ClusterStatus_ERROR
+	case cloudformation.StackStatusRollbackFailed:
+		return pb.ClusterStatus_ERROR
+	case cloudformation.StackStatusRollbackComplete:
+		return pb.ClusterStatus_ERROR
+	case cloudformation.StackStatusUpdateRollbackFailed:
+		return pb.ClusterStatus_ERROR
+	default:
+		return pb.ClusterStatus_STATUS_UNSPECIFIED
+	}
+}
 
 func (s *Server) CreateCluster(ctx context.Context, in *pb.CreateClusterMsg) (*pb.CreateClusterReply, error) {
 	// Quick validation
@@ -66,26 +101,35 @@ func (s *Server) GetCluster(ctx context.Context, in *pb.GetClusterMsg) (*pb.GetC
 		fmt.Printf("Error: %s\n", err)
 		return nil, err
 	}
-	kubeconfig, err := cluster.GetKubeConfig(stackId, cluster.SSHConnectionOptions{
-		BastionHost: cluster.SSHConnectionHost{
-			Hostname:      outputs.BastionHostPublicIp,
-			Port:          "22",
-			Username:      "ubuntu",
-			KeySecretName: stackId,
-		},
-		TargetHost: cluster.SSHConnectionHost{
-			Hostname:      outputs.MasterPrivateIp,
-			Port:          "22",
-			Username:      "ubuntu",
-			KeySecretName: stackId,
-		},
-	})
+
+	var kubeconfig []byte
+	if outputs.Status == cloudformation.StackStatusCreateComplete {
+		kubeconfig, err = cluster.GetKubeConfig(stackId, cluster.SSHConnectionOptions{
+			BastionHost: cluster.SSHConnectionHost{
+				Hostname:      outputs.BastionHostPublicIp,
+				Port:          "22",
+				Username:      "ubuntu",
+				KeySecretName: stackId,
+			},
+			TargetHost: cluster.SSHConnectionHost{
+				Hostname:      outputs.MasterPrivateIp,
+				Port:          "22",
+				Username:      "ubuntu",
+				KeySecretName: stackId,
+			},
+		})
+
+		if err != nil {
+			logger.Errorf("Error when creating cluster -->%s<-- kubeconfig, error message: %s", stackId, err)
+		}
+	}
+
 	return &pb.GetClusterReply{
 		Ok: true,
 		Cluster: &pb.ClusterDetailItem{
 			Id:         stackId,
 			Name:       stackId,
-			Status:     pb.ClusterStatus_RUNNING,
+			Status:     pb.ClusterStatus(matchStatus(outputs.Status)),
 			Kubeconfig: string(kubeconfig),
 		},
 	}, nil
