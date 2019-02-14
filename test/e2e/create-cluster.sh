@@ -1,5 +1,6 @@
 #!/bin/bash
 
+CLUSTER_API_HTTP=${CLUSTER_API_HTTP:-https}
 CLUSTER_API=${CLUSTER_API:-cluster-manager-api.cnct.io}
 CLUSTER_API_PORT=${CLUSTER_API_PORT:-443}
 CLUSTER_NAME=${CLUSTER_NAME:-aws-test-$(date +%s)}
@@ -63,7 +64,7 @@ JSON
 
 main() {
   curl -X POST \
-    "https://${CLUSTER_API}:${CLUSTER_API_PORT}/api/v1/cluster" \
+    "${CLUSTER_API_HTTP}://${CLUSTER_API}:${CLUSTER_API_PORT}/api/v1/cluster" \
     -H 'Cache-Control: no-cache' \
     -H 'Content-Type: application/json' \
     -d "${DATA}" \
