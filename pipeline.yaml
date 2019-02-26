@@ -26,13 +26,15 @@ builds:
     chart: cma-aws
     value: image.repo
     dockerContext: .
-  - image: quay.io/samsung_cnct/kind:prod
-    script: scripts/e2e-tests.sh
-    shell: /bin/bash
 deployments:
   - chart: cma-aws
     timeout: 600
     retries: 2
     release: cma-aws
+test:
+  afterScript:
+    image: quay.io/samsung_cnct/kind:prod
+    script: scripts/e2e-tests.sh
+    shell: /bin/bash
 prod:
   doDeploy: none
