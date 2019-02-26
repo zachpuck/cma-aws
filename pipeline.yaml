@@ -1,10 +1,34 @@
 type: chart
+envValues:
+  - envVar: AWS_ACCESS_K_ID
+    secret: jobs/cma-aws/AWS_ACCESS_KEY_ID
+  - envVar: AWS_SECRET_ACCESS_K
+    secret: jobs/cma-aws/AWS_SECRET_ACCESS_KEY
+  - envVar: CLUSTER_API_HTTP
+    value: http
+  - envVar: CLUSTER_API_NAMESPACE
+    value: default
+  - envVar: CLUSTER_API
+    value: cluster-manager-api-cluster-manager-api
+  - envVar: CLUSTER_API_PORT
+    value: "80"
+  - envVar: K8S_VERSION
+    value: "1.11.4"
+  - envVar: AWS_REGION
+    value: us-east-2
+  - envVar: AWS_AVAILABILITY_ZONE
+    value: us-east-2a
+  - envVar: CMA_CALLBACK_URL
+    value: "https://example.cnct.io"
 builds:
   - image: samsung_cnct/cma-aws
     context: cma-aws
     chart: cma-aws
     value: image.repo
     dockerContext: .
+  - image: quay.io/samsung_cnct/kind:prod
+    script: scripts/e2e-tests.sh
+    shell: /bin/bash
 deployments:
   - chart: cma-aws
     timeout: 600

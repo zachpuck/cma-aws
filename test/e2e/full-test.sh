@@ -2,13 +2,12 @@
 
 __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+export CLUSTER_API_HTTP=${CLUSTER_API_HTTP:-https}
 export CLUSTER_API=${CLUSTER_API:-cluster-manager-api.cnct.io}
 export CLUSTER_API_PORT=${CLUSTER_API_PORT:-443}
 export CLUSTER_NAME=${CLUSTER_NAME:-aws-test-$(date +%s)}
 export CLUSTER_API_NAMESPACE=${CLUSTER_API_NAMESPACE:-cma}
 export K8S_VERSION=${K8S_VERSION:-1.11.5}
-# the CMC kubeconfig path needed to get the client kubeconfig secret
-export KUBECONFIG=${CMC_KUBECONFIG}
 export CMA_CALLBACK_URL=${CMA_CALLBACK_URL:-https://webhook.site/#/15a7f31c-5b57-41fc-bd70-a8dec0f56442}
 export CMA_CALLBACK_REQUESTID=${CMA_CALLBACK_REQUESTID:-12345}
 
@@ -26,9 +25,8 @@ set -o pipefail
 
 readonly CLIENT_KUBECONFIG="$CLUSTER_NAME-kubeconfig.yaml"
 
-
 get_kubeconfig(){
-  $(kubectl get secrets --namespace "$CLUSTER_API_NAMESPACE" "${CLUSTER_NAME}-kubeconfig" -o 'go-template={{index .data "kubernetes.kubeconfig"}}' | base64 --decode > "${CLIENT_KUBECONFIG}")
+  "${__dir}/get-kubeconfig.sh" > "${CLIENT_KUBECONFIG}"
 }
 
 test_provisioning(){
@@ -86,7 +84,12 @@ test_ready(){
     return 1
   fi
 
-  echo "Nodes READY"
+  if echo $nodes | grep -o Ready; then
+    echo "Node(s) Ready"
+  else
+    return 1
+  fi
+
   return 0
 }
 
