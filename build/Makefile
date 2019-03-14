@@ -38,9 +38,9 @@ PROTOC_DARWIN_FILENAME=protoc-${PROTOC_VERSION}-osx-x86_64.zip
 PROTOC_DARWIN_DOWNLOAD_URL=https://github.com/google/protobuf/releases/download/v3.5.1/${PROTOC_DARWIN_FILENAME}
 
 # By default we will most likely want to build a linux build of the application
-all: new-dep cmaaws-bin-linux-amd64
+all: test new-dep cmaaws-bin-linux-amd64
 
-container-build: install-dep dep-ensure cmaaws-bin-linux-amd64
+container-build: test install-dep dep-ensure cmaaws-bin-linux-amd64
 
 # Clean will clean up dep and remove any binaries
 clean: remove-binary
@@ -74,6 +74,19 @@ new-dep:
 # For builds where we're just going to go along with whatever Gopkg is saying
 dep-ensure:
 	$(DEPCMD) ensure
+
+# Run tests
+test: fmt vet
+	go test ./pkg/eks...
+
+# Run go fmt against code
+fmt:
+	go fmt ./pkg/eks/...
+
+# Run go vet against code
+vet:
+	go vet ./pkg/eks/...
+
 
 # Run the code generators for the user
 generators:
