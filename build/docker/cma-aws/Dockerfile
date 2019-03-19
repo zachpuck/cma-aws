@@ -10,10 +10,6 @@ RUN apk update && apk add openssh ca-certificates make git curl
 # Let's add the code in
 ADD . /go/src/github.com/samsung-cnct/cma-aws
 
-# Build package in container
-WORKDIR /go/src/github.com/samsung-cnct/cma-aws
-RUN make -f build/Makefile container-build
-
 # install eksctl
 RUN mkdir -p /usr/local/bin
 RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/${EKSCTL_VERSION}/eksctl_Linux_amd64.tar.gz" | tar xz -C /tmp \
@@ -25,6 +21,10 @@ RUN curl --silent --location "https://dl.k8s.io/${KUBECTL_VERSION}/bin/linux/amd
 RUN curl -L https://amazon-eks.s3-us-west-2.amazonaws.com/${AWS_AUTH_VER}/bin/linux/amd64/aws-iam-authenticator \
   -o /usr/local/bin/aws-iam-authenticator && \
   chmod +x /usr/local/bin/aws-iam-authenticator
+
+# Build package in container
+WORKDIR /go/src/github.com/samsung-cnct/cma-aws
+RUN make -f build/Makefile container-build
 
 # Now that we have build a static binary, we can stuff it in a bare-bones alpine image
 # But we will need bash and openssh right now
