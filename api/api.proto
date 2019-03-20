@@ -113,6 +113,8 @@ message GetClusterMsg {
     string name = 1;
     // Credentials to query for the cluster
     AWSCredentials credentials = 2;
+    // Datacenter region
+    string region = 3;
 }
 
 message GetClusterReply {
@@ -127,6 +129,8 @@ message DeleteClusterMsg {
     string name = 1;
     // Credentials to delete the cluster
     AWSCredentials credentials = 2;
+    // Datacenter region
+    string region = 3;
 }
 
 message DeleteClusterReply {
@@ -139,6 +143,8 @@ message DeleteClusterReply {
 message GetClusterListMsg {
     // Credentials to query for the cluster
     AWSCredentials credentials = 1;
+    // Datacenter region (all regions checked if not set)
+    string region = 2;
 }
 
 message GetClusterListReply {
@@ -157,6 +163,8 @@ message ClusterItem {
     string status_message = 3;
     // The status of the cluster
     ClusterStatus status = 4;
+    // Datacenter region
+    string region = 5;
 }
 
 message ClusterDetailItem {
@@ -232,6 +240,11 @@ message CreateClusterAWSSpec {
         int32 min_quantity = 2;
         // Maximum number of instances (defaults to zero)
         int32 max_quantity = 3;
+        // Name of instance group (optional auto-generated if not set)
+        string name = 4;
+        // Number of worker node instances desired (defaults to zero)
+        int32 desired_quantity = 5;
+
     }
 }
 

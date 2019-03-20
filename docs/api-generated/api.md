@@ -1,5 +1,5 @@
 # Protocol Documentation
-<a name="top"></a>
+<a name="top"/>
 
 ## Table of Contents
 
@@ -61,14 +61,14 @@
 
 
 
-<a name="api.proto"></a>
+<a name="api.proto"/>
 <p align="right"><a href="#top">Top</a></p>
 
 ## api.proto
 
 
 
-<a name="cmaaws.AWSCredentials"></a>
+<a name="cmaaws.AWSCredentials"/>
 
 ### AWSCredentials
 The credentials to use for creating the cluster
@@ -85,7 +85,7 @@ The credentials to use for creating the cluster
 
 
 
-<a name="cmaaws.ClusterDetailItem"></a>
+<a name="cmaaws.ClusterDetailItem"/>
 
 ### ClusterDetailItem
 
@@ -104,7 +104,7 @@ The credentials to use for creating the cluster
 
 
 
-<a name="cmaaws.ClusterItem"></a>
+<a name="cmaaws.ClusterItem"/>
 
 ### ClusterItem
 
@@ -116,13 +116,14 @@ The credentials to use for creating the cluster
 | name | [string](#string) |  | Name of the cluster |
 | status_message | [string](#string) |  | Additional information about the status of the cluster |
 | status | [ClusterStatus](#cmaaws.ClusterStatus) |  | The status of the cluster |
+| region | [string](#string) |  | Datacenter region |
 
 
 
 
 
 
-<a name="cmaaws.CreateClusterAWSSpec"></a>
+<a name="cmaaws.CreateClusterAWSSpec"/>
 
 ### CreateClusterAWSSpec
 
@@ -140,7 +141,7 @@ The credentials to use for creating the cluster
 
 
 
-<a name="cmaaws.CreateClusterAWSSpec.AWSDataCenter"></a>
+<a name="cmaaws.CreateClusterAWSSpec.AWSDataCenter"/>
 
 ### CreateClusterAWSSpec.AWSDataCenter
 Which Data Center
@@ -156,7 +157,7 @@ Which Data Center
 
 
 
-<a name="cmaaws.CreateClusterAWSSpec.AWSInstanceGroup"></a>
+<a name="cmaaws.CreateClusterAWSSpec.AWSInstanceGroup"/>
 
 ### CreateClusterAWSSpec.AWSInstanceGroup
 Instance groups define a type and number of instances
@@ -167,13 +168,15 @@ Instance groups define a type and number of instances
 | type | [string](#string) |  | Instance type (m5.large, etc.) |
 | min_quantity | [int32](#int32) |  | Minimum number of instances (defaults to zero) |
 | max_quantity | [int32](#int32) |  | Maximum number of instances (defaults to zero) |
+| name | [string](#string) |  | Name of instance group (optional auto-generated if not set) |
+| desired_quantity | [int32](#int32) |  | Number of worker node instances desired (defaults to zero) |
 
 
 
 
 
 
-<a name="cmaaws.CreateClusterAWSSpec.AWSPreconfiguredItems"></a>
+<a name="cmaaws.CreateClusterAWSSpec.AWSPreconfiguredItems"/>
 
 ### CreateClusterAWSSpec.AWSPreconfiguredItems
 For when some things are already created
@@ -190,7 +193,7 @@ For when some things are already created
 
 
 
-<a name="cmaaws.CreateClusterMsg"></a>
+<a name="cmaaws.CreateClusterMsg"/>
 
 ### CreateClusterMsg
 
@@ -206,7 +209,7 @@ For when some things are already created
 
 
 
-<a name="cmaaws.CreateClusterProviderSpec"></a>
+<a name="cmaaws.CreateClusterProviderSpec"/>
 
 ### CreateClusterProviderSpec
 
@@ -225,7 +228,7 @@ For when some things are already created
 
 
 
-<a name="cmaaws.CreateClusterReply"></a>
+<a name="cmaaws.CreateClusterReply"/>
 
 ### CreateClusterReply
 
@@ -241,7 +244,7 @@ For when some things are already created
 
 
 
-<a name="cmaaws.DeleteClusterMsg"></a>
+<a name="cmaaws.DeleteClusterMsg"/>
 
 ### DeleteClusterMsg
 
@@ -251,13 +254,14 @@ For when some things are already created
 | ----- | ---- | ----- | ----------- |
 | name | [string](#string) |  | What is the cluster&#39;s name to destroy |
 | credentials | [AWSCredentials](#cmaaws.AWSCredentials) |  | Credentials to delete the cluster |
+| region | [string](#string) |  | Datacenter region |
 
 
 
 
 
 
-<a name="cmaaws.DeleteClusterReply"></a>
+<a name="cmaaws.DeleteClusterReply"/>
 
 ### DeleteClusterReply
 
@@ -273,7 +277,7 @@ For when some things are already created
 
 
 
-<a name="cmaaws.GetClusterListMsg"></a>
+<a name="cmaaws.GetClusterListMsg"/>
 
 ### GetClusterListMsg
 
@@ -282,13 +286,14 @@ For when some things are already created
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | credentials | [AWSCredentials](#cmaaws.AWSCredentials) |  | Credentials to query for the cluster |
+| region | [string](#string) |  | Datacenter region (all regions checked if not set) |
 
 
 
 
 
 
-<a name="cmaaws.GetClusterListReply"></a>
+<a name="cmaaws.GetClusterListReply"/>
 
 ### GetClusterListReply
 
@@ -304,7 +309,7 @@ For when some things are already created
 
 
 
-<a name="cmaaws.GetClusterMsg"></a>
+<a name="cmaaws.GetClusterMsg"/>
 
 ### GetClusterMsg
 
@@ -314,13 +319,14 @@ For when some things are already created
 | ----- | ---- | ----- | ----------- |
 | name | [string](#string) |  | Name of the cluster to be looked up |
 | credentials | [AWSCredentials](#cmaaws.AWSCredentials) |  | Credentials to query for the cluster |
+| region | [string](#string) |  | Datacenter region |
 
 
 
 
 
 
-<a name="cmaaws.GetClusterReply"></a>
+<a name="cmaaws.GetClusterReply"/>
 
 ### GetClusterReply
 
@@ -336,7 +342,7 @@ For when some things are already created
 
 
 
-<a name="cmaaws.GetVersionMsg"></a>
+<a name="cmaaws.GetVersionMsg"/>
 
 ### GetVersionMsg
 Get version of API Server
@@ -346,7 +352,7 @@ Get version of API Server
 
 
 
-<a name="cmaaws.GetVersionReply"></a>
+<a name="cmaaws.GetVersionReply"/>
 
 ### GetVersionReply
 Reply for version request
@@ -362,7 +368,7 @@ Reply for version request
 
 
 
-<a name="cmaaws.GetVersionReply.VersionInformation"></a>
+<a name="cmaaws.GetVersionReply.VersionInformation"/>
 
 ### GetVersionReply.VersionInformation
 
@@ -385,7 +391,7 @@ Reply for version request
  
 
 
-<a name="cmaaws.ClusterStatus"></a>
+<a name="cmaaws.ClusterStatus"/>
 
 ### ClusterStatus
 
@@ -406,31 +412,31 @@ Reply for version request
  
 
 
-<a name="cmaaws.Cluster"></a>
+<a name="cmaaws.Cluster"/>
 
 ### Cluster
 
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| CreateCluster | [CreateClusterMsg](#cmaaws.CreateClusterMsg) | [CreateClusterReply](#cmaaws.CreateClusterReply) | Will provision a cluster |
-| GetCluster | [GetClusterMsg](#cmaaws.GetClusterMsg) | [GetClusterReply](#cmaaws.GetClusterReply) | Will retrieve the status of a cluster and its kubeconfig for connectivity |
-| DeleteCluster | [DeleteClusterMsg](#cmaaws.DeleteClusterMsg) | [DeleteClusterReply](#cmaaws.DeleteClusterReply) | Will delete a cluster |
-| GetClusterList | [GetClusterListMsg](#cmaaws.GetClusterListMsg) | [GetClusterListReply](#cmaaws.GetClusterListReply) | Will retrieve a list of clusters |
-| GetVersionInformation | [GetVersionMsg](#cmaaws.GetVersionMsg) | [GetVersionReply](#cmaaws.GetVersionReply) | Will return version information about api server |
+| CreateCluster | [CreateClusterMsg](#cmaaws.CreateClusterMsg) | [CreateClusterReply](#cmaaws.CreateClusterMsg) | Will provision a cluster |
+| GetCluster | [GetClusterMsg](#cmaaws.GetClusterMsg) | [GetClusterReply](#cmaaws.GetClusterMsg) | Will retrieve the status of a cluster and its kubeconfig for connectivity |
+| DeleteCluster | [DeleteClusterMsg](#cmaaws.DeleteClusterMsg) | [DeleteClusterReply](#cmaaws.DeleteClusterMsg) | Will delete a cluster |
+| GetClusterList | [GetClusterListMsg](#cmaaws.GetClusterListMsg) | [GetClusterListReply](#cmaaws.GetClusterListMsg) | Will retrieve a list of clusters |
+| GetVersionInformation | [GetVersionMsg](#cmaaws.GetVersionMsg) | [GetVersionReply](#cmaaws.GetVersionMsg) | Will return version information about api server |
 
  
 
 
 
-<a name="api.proto"></a>
+<a name="api.proto"/>
 <p align="right"><a href="#top">Top</a></p>
 
 ## api.proto
 
 
 
-<a name="cmaaws.AWSCredentials"></a>
+<a name="cmaaws.AWSCredentials"/>
 
 ### AWSCredentials
 The credentials to use for creating the cluster
@@ -447,7 +453,7 @@ The credentials to use for creating the cluster
 
 
 
-<a name="cmaaws.ClusterDetailItem"></a>
+<a name="cmaaws.ClusterDetailItem"/>
 
 ### ClusterDetailItem
 
@@ -466,7 +472,7 @@ The credentials to use for creating the cluster
 
 
 
-<a name="cmaaws.ClusterItem"></a>
+<a name="cmaaws.ClusterItem"/>
 
 ### ClusterItem
 
@@ -478,13 +484,14 @@ The credentials to use for creating the cluster
 | name | [string](#string) |  | Name of the cluster |
 | status_message | [string](#string) |  | Additional information about the status of the cluster |
 | status | [ClusterStatus](#cmaaws.ClusterStatus) |  | The status of the cluster |
+| region | [string](#string) |  | Datacenter region |
 
 
 
 
 
 
-<a name="cmaaws.CreateClusterAWSSpec"></a>
+<a name="cmaaws.CreateClusterAWSSpec"/>
 
 ### CreateClusterAWSSpec
 
@@ -502,7 +509,7 @@ The credentials to use for creating the cluster
 
 
 
-<a name="cmaaws.CreateClusterAWSSpec.AWSDataCenter"></a>
+<a name="cmaaws.CreateClusterAWSSpec.AWSDataCenter"/>
 
 ### CreateClusterAWSSpec.AWSDataCenter
 Which Data Center
@@ -518,7 +525,7 @@ Which Data Center
 
 
 
-<a name="cmaaws.CreateClusterAWSSpec.AWSInstanceGroup"></a>
+<a name="cmaaws.CreateClusterAWSSpec.AWSInstanceGroup"/>
 
 ### CreateClusterAWSSpec.AWSInstanceGroup
 Instance groups define a type and number of instances
@@ -529,13 +536,15 @@ Instance groups define a type and number of instances
 | type | [string](#string) |  | Instance type (m5.large, etc.) |
 | min_quantity | [int32](#int32) |  | Minimum number of instances (defaults to zero) |
 | max_quantity | [int32](#int32) |  | Maximum number of instances (defaults to zero) |
+| name | [string](#string) |  | Name of instance group (optional auto-generated if not set) |
+| desired_quantity | [int32](#int32) |  | Number of worker node instances desired (defaults to zero) |
 
 
 
 
 
 
-<a name="cmaaws.CreateClusterAWSSpec.AWSPreconfiguredItems"></a>
+<a name="cmaaws.CreateClusterAWSSpec.AWSPreconfiguredItems"/>
 
 ### CreateClusterAWSSpec.AWSPreconfiguredItems
 For when some things are already created
@@ -552,7 +561,7 @@ For when some things are already created
 
 
 
-<a name="cmaaws.CreateClusterMsg"></a>
+<a name="cmaaws.CreateClusterMsg"/>
 
 ### CreateClusterMsg
 
@@ -568,7 +577,7 @@ For when some things are already created
 
 
 
-<a name="cmaaws.CreateClusterProviderSpec"></a>
+<a name="cmaaws.CreateClusterProviderSpec"/>
 
 ### CreateClusterProviderSpec
 
@@ -587,7 +596,7 @@ For when some things are already created
 
 
 
-<a name="cmaaws.CreateClusterReply"></a>
+<a name="cmaaws.CreateClusterReply"/>
 
 ### CreateClusterReply
 
@@ -603,7 +612,7 @@ For when some things are already created
 
 
 
-<a name="cmaaws.DeleteClusterMsg"></a>
+<a name="cmaaws.DeleteClusterMsg"/>
 
 ### DeleteClusterMsg
 
@@ -613,13 +622,14 @@ For when some things are already created
 | ----- | ---- | ----- | ----------- |
 | name | [string](#string) |  | What is the cluster&#39;s name to destroy |
 | credentials | [AWSCredentials](#cmaaws.AWSCredentials) |  | Credentials to delete the cluster |
+| region | [string](#string) |  | Datacenter region |
 
 
 
 
 
 
-<a name="cmaaws.DeleteClusterReply"></a>
+<a name="cmaaws.DeleteClusterReply"/>
 
 ### DeleteClusterReply
 
@@ -635,7 +645,7 @@ For when some things are already created
 
 
 
-<a name="cmaaws.GetClusterListMsg"></a>
+<a name="cmaaws.GetClusterListMsg"/>
 
 ### GetClusterListMsg
 
@@ -644,13 +654,14 @@ For when some things are already created
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | credentials | [AWSCredentials](#cmaaws.AWSCredentials) |  | Credentials to query for the cluster |
+| region | [string](#string) |  | Datacenter region (all regions checked if not set) |
 
 
 
 
 
 
-<a name="cmaaws.GetClusterListReply"></a>
+<a name="cmaaws.GetClusterListReply"/>
 
 ### GetClusterListReply
 
@@ -666,7 +677,7 @@ For when some things are already created
 
 
 
-<a name="cmaaws.GetClusterMsg"></a>
+<a name="cmaaws.GetClusterMsg"/>
 
 ### GetClusterMsg
 
@@ -676,13 +687,14 @@ For when some things are already created
 | ----- | ---- | ----- | ----------- |
 | name | [string](#string) |  | Name of the cluster to be looked up |
 | credentials | [AWSCredentials](#cmaaws.AWSCredentials) |  | Credentials to query for the cluster |
+| region | [string](#string) |  | Datacenter region |
 
 
 
 
 
 
-<a name="cmaaws.GetClusterReply"></a>
+<a name="cmaaws.GetClusterReply"/>
 
 ### GetClusterReply
 
@@ -698,7 +710,7 @@ For when some things are already created
 
 
 
-<a name="cmaaws.GetVersionMsg"></a>
+<a name="cmaaws.GetVersionMsg"/>
 
 ### GetVersionMsg
 Get version of API Server
@@ -708,7 +720,7 @@ Get version of API Server
 
 
 
-<a name="cmaaws.GetVersionReply"></a>
+<a name="cmaaws.GetVersionReply"/>
 
 ### GetVersionReply
 Reply for version request
@@ -724,7 +736,7 @@ Reply for version request
 
 
 
-<a name="cmaaws.GetVersionReply.VersionInformation"></a>
+<a name="cmaaws.GetVersionReply.VersionInformation"/>
 
 ### GetVersionReply.VersionInformation
 
@@ -747,7 +759,7 @@ Reply for version request
  
 
 
-<a name="cmaaws.ClusterStatus"></a>
+<a name="cmaaws.ClusterStatus"/>
 
 ### ClusterStatus
 
@@ -768,18 +780,18 @@ Reply for version request
  
 
 
-<a name="cmaaws.Cluster"></a>
+<a name="cmaaws.Cluster"/>
 
 ### Cluster
 
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| CreateCluster | [CreateClusterMsg](#cmaaws.CreateClusterMsg) | [CreateClusterReply](#cmaaws.CreateClusterReply) | Will provision a cluster |
-| GetCluster | [GetClusterMsg](#cmaaws.GetClusterMsg) | [GetClusterReply](#cmaaws.GetClusterReply) | Will retrieve the status of a cluster and its kubeconfig for connectivity |
-| DeleteCluster | [DeleteClusterMsg](#cmaaws.DeleteClusterMsg) | [DeleteClusterReply](#cmaaws.DeleteClusterReply) | Will delete a cluster |
-| GetClusterList | [GetClusterListMsg](#cmaaws.GetClusterListMsg) | [GetClusterListReply](#cmaaws.GetClusterListReply) | Will retrieve a list of clusters |
-| GetVersionInformation | [GetVersionMsg](#cmaaws.GetVersionMsg) | [GetVersionReply](#cmaaws.GetVersionReply) | Will return version information about api server |
+| CreateCluster | [CreateClusterMsg](#cmaaws.CreateClusterMsg) | [CreateClusterReply](#cmaaws.CreateClusterMsg) | Will provision a cluster |
+| GetCluster | [GetClusterMsg](#cmaaws.GetClusterMsg) | [GetClusterReply](#cmaaws.GetClusterMsg) | Will retrieve the status of a cluster and its kubeconfig for connectivity |
+| DeleteCluster | [DeleteClusterMsg](#cmaaws.DeleteClusterMsg) | [DeleteClusterReply](#cmaaws.DeleteClusterMsg) | Will delete a cluster |
+| GetClusterList | [GetClusterListMsg](#cmaaws.GetClusterListMsg) | [GetClusterListReply](#cmaaws.GetClusterListMsg) | Will retrieve a list of clusters |
+| GetVersionInformation | [GetVersionMsg](#cmaaws.GetVersionMsg) | [GetVersionReply](#cmaaws.GetVersionMsg) | Will return version information about api server |
 
  
 
