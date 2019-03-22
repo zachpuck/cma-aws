@@ -19,4 +19,6 @@ type EKSCluster interface {
 	GetUpgradeVersions(GetUpgradeVersionsInput) (GetUpgradeVersionsOutput, error)
 	// UpgradeCluster upgrades the version
 	UpgradeCluster(UpgradeClusterInput) error
+	// GetKubeConfig writes the kubeconfig to the specified path
+	GetKubeConfig(KubeConfigPath string) error
 }
