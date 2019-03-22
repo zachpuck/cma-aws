@@ -2,12 +2,14 @@ package eks
 
 import "testing"
 
-func TestCreate(t *testing.T) {
+func TestCreateEksBadToken(t *testing.T) {
 	ekscluster := New(AwsCredentials{
-		AccessKeyId:     "secret",
-		SecretAccessKey: "secret",
+		AccessKeyId:     "BOGUS",
+		SecretAccessKey: "BOGUS",
 		Region:          "us-east-1",
-	}, "test1", "us-east-1", "")
+	}, "ekstest1", "us-west-2", "/tmp/kubeconfig")
+
+	azs := []string{"us-west-2b", "us-west-2c", "us-west-2d"}
 
 	nodepools := make([]NodePool, 1)
 	nodepools[0].Name = "nodepool1"
@@ -18,10 +20,10 @@ func TestCreate(t *testing.T) {
 		Name:              ekscluster.clusterName,
 		Version:           "1.11",
 		Region:            ekscluster.region,
-		AvailabilityZones: nil,
+		AvailabilityZones: azs,
 		NodePools:         nodepools,
 	})
-	if err != nil {
-		t.Errorf("ekscluster.Create() = %s; want nil", err)
+	if err == nil {
+		t.Errorf("want error, got nil")
 	}
 }

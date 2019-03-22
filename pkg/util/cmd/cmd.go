@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/juju/loggo"
+	log "github.com/samsung-cnct/cma-aws/pkg/util"
 )
 
 var (
@@ -38,7 +39,7 @@ func New(name string, args []string, timeout time.Duration, environ []string) *C
 
 func (c *Cmd) Run() (bytes.Buffer, error) {
 	var streamOut, streamErr bytes.Buffer
-
+	logger = log.GetModuleLogger("pkg.util.cmd", loggo.INFO)
 	logger.Infof("Running command \"%v %v\"\n", c.Name, strings.Join(c.Args, " "))
 	cmd := exec.Command(c.Name, c.Args...)
 
@@ -75,7 +76,6 @@ func (c *Cmd) Run() (bytes.Buffer, error) {
 	case err := <-done:
 		// We do not print stdout because it may contain secrets.
 		fmt.Fprintf(os.Stderr, "Command %v stderr: %v\n", c.Name, string(streamErr.Bytes()))
-
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Command %v returned err %v\n", c.Name, err)
 			return streamOut, err
