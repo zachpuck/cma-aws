@@ -1,5 +1,6 @@
 #!/bin/bash
 
+CLUSTER_API_HTTP=${CLUSTER_API_HTTP:-https}
 CLUSTER_API=${CLUSTER_API:-cluster-manager-api.cnct.io}
 CLUSTER_API_PORT=${CLUSTER_API_PORT:-443}
 CLUSTER_NAME=${CLUSTER_NAME}
@@ -42,7 +43,7 @@ main() {
   url_encode="${REPLY}"
 
   curl -X DELETE \
-    "https://${CLUSTER_API}:${CLUSTER_API_PORT}/api/v1/cluster?name=${CLUSTER_NAME}&aws.secret_key_id=${AWS_ACCESS_KEY_ID}&aws.secret_access_key=${secret_encode}&aws.region=${AWS_REGION}&provider=aws&callback.url=${url_encode}&callback.request_id=${CMA_CALLBACK_REQUESTID}" \
+    "${CLUSTER_API_HTTP}://${CLUSTER_API}:${CLUSTER_API_PORT}/api/v1/cluster?name=${CLUSTER_NAME}&aws.secret_key_id=${AWS_ACCESS_KEY_ID}&aws.secret_access_key=${secret_encode}&aws.region=${AWS_REGION}&provider=aws&callback.url=${url_encode}&callback.request_id=${CMA_CALLBACK_REQUESTID}" \
     -H 'Cache-Control: no-cache' \
     -H 'Content-Type: application/json' \
     -iks

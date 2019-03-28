@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cma-aws-e2e-tests
+spec:
+  template:
+    spec:
+      containers:
+        - name: cma-aws-e2e-tests
+          image: quay.io/samsung_cnct/kind:prod
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              value: ${AWS_ACCESS_K_ID}
+            - name: AWS_SECRET_ACCESS_KEY
+              value: ${AWS_SECRET_ACCESS_K}
+            - name: CLUSTER_API_HTTP
+              value: ${CLUSTER_API_HTTP}
+            - name: CLUSTER_API_NAMESPACE
+              value: ${CLUSTER_API_NAMESPACE}
+            - name: CLUSTER_API
+              value: ${CLUSTER_API}
+            - name: CLUSTER_API_PORT
+              value: "${CLUSTER_API_PORT}"
+            - name: K8S_VERSION
+              value: ${K8S_VERSION}
+            - name: AWS_REGION
+              value: ${AWS_REGION}
+            - name: AWS_AVAILABILITY_ZONE
+              value: ${AWS_AVAILABILITY_ZONE}
+            - name: CMA_CALLBACK_URL
+              value: ${CMA_CALLBACK_URL}
+          volumeMounts:
+            - name: test
+              mountPath: /test
+          command: ["/test/full-test.sh"]
+      restartPolicy: Never
+      volumes:
+        - name: test
+          hostPath:
+            path: /root/e2e
+  backoffLimit: 4 

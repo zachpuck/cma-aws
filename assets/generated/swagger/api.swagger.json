@@ -60,6 +60,13 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "region",
+            "description": "Datacenter region.",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -102,6 +109,13 @@
           {
             "name": "credentials.region",
             "description": "The Region for API access.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "region",
+            "description": "Datacenter region.",
             "in": "query",
             "required": false,
             "type": "string"
@@ -170,6 +184,13 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "region",
+            "description": "Datacenter region (all regions checked if not set).",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -229,6 +250,15 @@
           "type": "integer",
           "format": "int32",
           "title": "Maximum number of instances (defaults to zero)"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name of instance group (optional auto-generated if not set)"
+        },
+        "desired_quantity": {
+          "type": "integer",
+          "format": "int32",
+          "title": "Number of worker node instances desired (defaults to zero)"
         }
       },
       "title": "Instance groups define a type and number of instances"
@@ -345,6 +375,10 @@
         "status": {
           "$ref": "#/definitions/cmaawsClusterStatus",
           "title": "The status of the cluster"
+        },
+        "region": {
+          "type": "string",
+          "title": "Datacenter region"
         }
       }
     },
